@@ -70,13 +70,17 @@ dependencies {
 
     implementation("androidx.constraintlayout:constraintlayout:2.0.4")
 
-    //lottie-compose
-    implementation("com.airbnb.android:lottie-compose:5.2.0")
     //compose-navigation
     implementation("androidx.navigation:navigation-compose:2.5.0")
 
+    //lottie-compose
+    implementation("com.airbnb.android:lottie-compose:5.2.0")
+    //material Icons
+    implementation("androidx.compose.material:material-icons-extended")
+    //google fonts
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.4.0")
 
-    //core-splash
-    implementation("androidx.core:core-splashscreen:1.0.0")
+    //core-splash-
+    //implementation("androidx.core:core-splashscreen:1.0.0")
 
 }

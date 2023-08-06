@@ -12,6 +12,12 @@ import com.android.bloomshows.R
 val handlee = FontFamily(
     Font(R.font.handlee, weight = FontWeight.SemiBold)
 )
+
+val cera_pro = FontFamily(
+    Font(R.font.cera_pro_light, weight = FontWeight.Bold),
+    Font(R.font.cera_pro_bold, weight = FontWeight.Normal),
+)
+
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
