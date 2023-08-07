@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -43,8 +46,11 @@ fun SplashScreen(
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        SplashLogoBloomShows(navigate_to_home,navigate_to_onboarding)
-        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center).offset(y = 100.dp), color = Color.Gray.copy(alpha = 0.5f))
+        SplashLogoBloomShows(navigate_to_home, navigate_to_onboarding)
+        CircularProgressIndicator(
+            modifier = Modifier.align(Alignment.Center).offset(y = 100.dp),
+            color = Color.Gray.copy(alpha = 0.5f)
+        )
 
         Row(
             modifier = Modifier
@@ -77,17 +83,16 @@ fun SplashLogoBloomShows(
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.animated_logo_bloomshows))
     val logoAnimationState =
-        animateLottieCompositionAsState(composition = composition, speed = 3f)
+        animateLottieCompositionAsState(composition = composition, speed = 2.5f)
     LottieAnimation(
         modifier = Modifier.size(108.dp),
         composition = composition,
         progress = { logoAnimationState.progress }
     )
     if (logoAnimationState.isAtEnd && logoAnimationState.isPlaying) {
-        navigate_to_onboarding()
-        //TODO show
         //TODO call only when user laucnhed for the very first time
-        // OnBoardingScreen()
+        navigate_to_onboarding()
+
     }
 }
 
@@ -96,7 +101,28 @@ fun SplashLogoBloomShows(
 @Preview
 @Composable
 fun SplashScreenPreview() {
-    BloomShowsTheme(darkTheme = !true) {
-        SplashScreen(navigate_to_home = {}, navigate_to_onboarding = {})
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        BloomShowsTheme(darkTheme = false) {
+            SplashScreen(navigate_to_home = {}, navigate_to_onboarding = {})
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview
+@Composable
+fun SplashScreenPreviewDark() {
+
+    BloomShowsTheme(darkTheme = true) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            SplashScreen(navigate_to_home = {}, navigate_to_onboarding = {})
+        }
     }
 }

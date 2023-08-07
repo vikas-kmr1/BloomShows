@@ -10,8 +10,10 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
+internal val lightBtnBg = Color(0xFFFDFDFD)
+
 //onBoardingPalette
-internal val onBoardYellow = Color(0xFFF7C737)
-internal val onBoardCyan = Color(0xFF88D8DF)
-internal val onBoardPink = Color(0xFFF2D2DC)
+internal val onBoardYellow = Color(0xFFF7C730)
+internal val onBoardCyan = Color(0xFF70CCD0)
+internal val onBoardPink = Color(0xFFF5B4C7)
 

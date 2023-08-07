@@ -2,6 +2,7 @@ package com.android.bloomshows.presentation.on_boarding
 
 import android.graphics.drawable.Drawable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import com.android.bloomshows.R
 import com.android.bloomshows.ui.theme.onBoardCyan
 import com.android.bloomshows.ui.theme.onBoardPink
@@ -16,7 +17,7 @@ data class DataOnBoarding(
 )
 val onBoardingSlides = listOf(
     DataOnBoarding(
-        label = "Welcome to [App Name]" ,
+        label = "Welcome to BloomShows" ,
         subLabel =  "Step into a World of Cinematic Delights",
         slideind = 0,
         illustration = R.drawable.ic_bloomshows,
@@ -24,7 +25,7 @@ val onBoardingSlides = listOf(
     ),
     DataOnBoarding(
         label = "Discover Movies and Showtimes" ,
-        subLabel =  "Explore, Choose, and Immerse Yourself in Movie Magic\"",
+        subLabel =  "Explore, Choose, and Immerse Yourself in Movie Magic",
         slideind = 1,
         illustration = R.drawable.ic_bloomshows,
         backgroundColor = onBoardCyan
