@@ -19,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -39,7 +40,6 @@ fun ButtonWithIndicator(
     color: Color = lightBtnBg,
     nav_to_login: () -> Unit = {}
 ) {
-
     val pageInd = pagerState.currentPage
     val scope = rememberCoroutineScope()
     Box(
@@ -52,9 +52,9 @@ fun ButtonWithIndicator(
         //left top corner
         Box(
             modifier = Modifier
-                .offset(x = 3.dp, y = 0.dp)
-                .size(width = 34.dp, height = 49.dp)
-                .padding(top = 3.dp, end = 3.dp)
+                .align(Alignment.TopStart)
+                .size(width = 35.dp, height = 42.dp)
+                .padding(all = 3.dp)
                 .clip(RoundedCornerShape(topStart = 22.dp))
                 .background(
                     if (pageInd >= 0) onBoardYellow else Color.Gray
@@ -65,22 +65,21 @@ fun ButtonWithIndicator(
 
         Box(
             modifier = Modifier
-                .offset(x = 37.dp, y = 0.dp)
-                .size(width = 34.dp, height = 49.dp)
-                .padding(top = 3.dp, end = 3.dp)
+                .align(Alignment.TopEnd)
+                .size(width = 35.dp, height = 42.dp)
+                .padding(all = 3.dp)
                 .clip(RoundedCornerShape(topEnd = 22.dp))
                 .background(
                     if (pageInd >= 1) onBoardCyan else Color.LightGray
                 )
         ) {}
 
-
         // bottom Curve
         Box(
             modifier = Modifier
-                .offset(x = 3.dp, y = 48.dp)
-                .size(width = 64.dp, height = 22.dp)
-                .padding(bottom = 3.dp, top = 3.dp)
+                .align(Alignment.BottomCenter)
+                .size(width = 70.dp, height = 28.dp)
+                .padding(all = 3.dp)
                 .clip(RoundedCornerShape(bottomStart = 22.dp, bottomEnd = 22.dp))
                 .background(
                     if (pageInd == 2) onBoardPink else Color.LightGray
@@ -96,6 +95,8 @@ fun ButtonWithIndicator(
             },
             modifier = Modifier
                 .matchParentSize()
+                .align(Alignment.Center)
+
                 .padding(6.dp)
                 .clip(RoundedCornerShape(20.dp)),
             colors = IconButtonDefaults.iconButtonColors(containerColor = color),

@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import com.android.bloomshows.presentation.login.LoginRoute
 import com.android.bloomshows.presentation.on_boarding.OnBoardingScreen
 import com.android.bloomshows.presentation.on_boarding.onBoardingSlides
 import com.android.bloomshows.presentation.splash.SplashScreen
@@ -46,7 +47,7 @@ fun NavGraph(
         }
 
         composable(route = LoginDestination.route){
-            Text(text = LoginDestination.title)
+            LoginRoute()
         }
         composable(route = SignUpDestination.route){
 

@@ -1,19 +1,25 @@
 package com.android.bloomshows.presentation.on_boarding
 
+import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Icon
@@ -21,11 +27,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,7 +46,6 @@ import com.android.bloomshows.R
 import com.android.bloomshows.ui.compoents.ButtonWithIndicator
 import com.android.bloomshows.ui.compoents.WormPageIndicator
 import com.android.bloomshows.ui.theme.BloomShowsTheme
-import kotlin.text.Typography.times
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -43,9 +54,27 @@ import kotlin.text.Typography.times
 fun OnBoardingScreen(
     slides: List<DataOnBoarding> = onBoardingSlides, navigate_to_login: () -> Unit = {}
 ) {
-    val pagerState = rememberPagerState(0)
+    //TODO add reveal and text trasition
+/*  // Not Using for now :
+    //screen orientation check
+    var orientation by remember { mutableStateOf(Configuration.ORIENTATION_PORTRAIT) }
+    val configuration = LocalConfiguration.current
 
+    LaunchedEffect(configuration) {
+        // Save any changes to the orientation value on the configuration object
+        snapshotFlow { configuration.orientation }
+            .collect { orientation = it }
+    }
+
+    val offetVertical = when (orientation) {
+        Configuration.ORIENTATION_PORTRAIT -> 70.dp
+        else -> {
+            -50.dp
+        }
+    }*/
+    val pagerState = rememberPagerState(0)
     val pageCount = slides.size
+
     Box() {
         HorizontalPager(
             verticalAlignment = Alignment.CenterVertically,
@@ -54,34 +83,45 @@ fun OnBoardingScreen(
         ) { page ->
             // Our page content
             //TODO add drawables islustrations
-
             Box(
                 modifier = Modifier.fillMaxSize()
-
-                    .background(slides[pagerState.currentPage].backgroundColor)
-
-            )
-            {
-            }
+                    .background(slides[pagerState.currentPage].backgroundColor),
+                contentAlignment = Alignment.Center
+            ) {}
         }
 
         TopContent(
-            modifier = Modifier.fillMaxWidth().offset(y = 50.dp).align(Alignment.TopCenter),
+            modifier = Modifier.fillMaxWidth().align(Alignment.TopCenter).offset(y = 30.dp)
+                .windowInsetsPadding(WindowInsets.statusBars),
             navigate_to_login = { navigate_to_login() },
             pagerState.currentPage
         )
 
-        LabelGroup(slides[pagerState.currentPage], Modifier.align(Alignment.CenterStart))
-        WormPageIndicator(
-            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 20.dp),
-            totalPages = pageCount,
-            currentPage = pagerState.currentPage
-        )
-        ButtonWithIndicator(
-            modifier = Modifier.align(Alignment.BottomEnd).padding(bottom = 30.dp, end = 20.dp),
-            pagerState = pagerState,
-            nav_to_login = navigate_to_login
-        )
+        Column(modifier = Modifier.fillMaxWidth().offset(y=60.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.Start) {
+            Image(
+                modifier = Modifier.fillMaxWidth(),
+                painter = painterResource(slides[pagerState.currentPage].illustration),
+                contentDescription = "slide ${pagerState.currentPage} illustrations"
+            )
+            LabelGroup(
+                slides[pagerState.currentPage],
+                Modifier
+            )
+        }
+        Box(modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter).padding(20.dp)) {
+            WormPageIndicator(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                totalPages = pageCount,
+                currentPage = pagerState.currentPage
+            )
+            ButtonWithIndicator(
+                modifier = Modifier.align(Alignment.BottomEnd),
+                pagerState = pagerState,
+                nav_to_login = navigate_to_login
+            )
+        }
     }
 }
 
@@ -114,7 +154,7 @@ fun TopContent(modifier: Modifier = Modifier, navigate_to_login: () -> Unit, pag
 
 @Composable
 fun LabelGroup(page: DataOnBoarding, modifier: Modifier = Modifier) {
-    Column(modifier = modifier.offset(y = 60.dp).padding(horizontal = 20.dp)) {
+    Column(modifier = modifier.padding(horizontal = 20.dp)) {
         Text(text = page.label, color = Color.Black, style = MaterialTheme.typography.labelLarge)
         Text(text = page.subLabel, color = Color.Black, style = MaterialTheme.typography.labelSmall)
     }
