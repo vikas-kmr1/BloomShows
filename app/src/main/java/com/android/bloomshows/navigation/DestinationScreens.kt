@@ -1,4 +1,4 @@
-package com.android.bloomshows.Navigation
+package com.android.bloomshows.navigation
 
 interface Screens {
     val title: String

@@ -1,20 +1,14 @@
-package com.android.bloomshows.Navigation
+package com.android.bloomshows.navigation
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
-import com.android.bloomshows.presentation.login.LoginRoute
+import com.android.bloomshows.presentation.login_and_signup.login.LoginRoute
 import com.android.bloomshows.presentation.on_boarding.OnBoardingScreen
-import com.android.bloomshows.presentation.on_boarding.onBoardingSlides
 import com.android.bloomshows.presentation.splash.SplashScreen
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavGraph(
     navigationController: NavHostController = rememberNavController()
@@ -41,21 +35,28 @@ fun NavGraph(
 
         composable(route = OnboardingDestination.route) {
             OnBoardingScreen(navigate_to_login = {
-                //navigationController.popBackStack()
+                navigationController.popBackStack()
                 navigationController.navigate(LoginDestination.route)
             })
         }
 
-        composable(route = LoginDestination.route){
-            LoginRoute()
+        composable(route = LoginDestination.route) {
+            LoginRoute(
+                onNavigateToSignUp = {
+                    navigationController.navigate(route = SignUpDestination.route)
+                },
+                onLogInSubmitted = {},
+                onNavUp = navigationController::navigateUp,
+            )
         }
-        composable(route = SignUpDestination.route){
+
+        composable(route = SignUpDestination.route) {
 
         }
-        composable(route = ForgetCredentialsDestination.route){
+        composable(route = ForgetCredentialsDestination.route) {
 
         }
-        composable(route = HomeDestination.route){
+        composable(route = HomeDestination.route) {
 
         }
 

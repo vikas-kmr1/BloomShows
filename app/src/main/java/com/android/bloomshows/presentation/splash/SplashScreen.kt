@@ -2,10 +2,7 @@ package com.android.bloomshows.presentation.splash
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -13,27 +10,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.android.bloomshows.R
-import com.android.bloomshows.presentation.on_boarding.OnBoardingScreen
+import com.android.bloomshows.ui.compoents.BloomshowsBranding
 import com.android.bloomshows.ui.theme.BloomShowsTheme
-import com.android.bloomshows.ui.theme.handlee
+import com.android.bloomshows.ui.theme.MediumPadding
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -52,31 +43,18 @@ fun SplashScreen(
             color = Color.Gray.copy(alpha = 0.5f)
         )
 
-        Row(
+        BloomshowsBranding(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 20.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Image(
-                modifier = Modifier.size(28.dp),
-                painter = painterResource(R.drawable.ic_bloomshows),
-                contentDescription = "bloomshows logo"
-            )
-            Text(
-                text = stringResource(R.string.app_name),
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = handlee
-            )
-        }
+                .padding(bottom = MediumPadding),
+        )
     }
 }
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun SplashLogoBloomShows(
+private fun SplashLogoBloomShows(
     navigate_to_home: () -> Unit,
     navigate_to_onboarding: () -> Unit,
 ) {

@@ -1,4 +1,4 @@
-package com.android.bloomshows.presentation.login
+package com.android.bloomshows.presentation.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +15,7 @@ import com.android.bloomshows.R
 import com.android.bloomshows.ui.theme.BloomShowsTheme
 
 @Composable
-fun LoginScreen() {
+fun HomeScreen() {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.animation_sparkling))
     val logoAnimationState =
         animateLottieCompositionAsState(composition = composition, speed = 1f)
@@ -28,13 +28,12 @@ fun LoginScreen() {
         //TODO call only when user laucnhed for the very first time
 
     }
-
 }
+
 @Preview
 @Composable
-fun PreviewLoginScreen() {
-
+fun PreviewHomeScreen(){
     BloomShowsTheme {
-        LoginScreen()
+        HomeScreen()
     }
 }

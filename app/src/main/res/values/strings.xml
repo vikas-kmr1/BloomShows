@@ -2,4 +2,20 @@
     <string name="app_name">BloomShows</string>
     <string name="dfs">dfs</string>
     <string name="skip">Skip</string>
+    <string name="welcome_to_bloomshows">Welcome to BloomShows</string>
+    <string name="login_or_signup_to_continue">Login or Signup to continue</string>
+    <string name="login_with_google">Login with Google</string>
+    <string name="login_with_facebook">Login with Facebook</string>
+    <string name="or_continue_with_email">or continue with email</string>
+    <string name="login_icon_back">Login icon back</string>
+    <string name="login">Login</string>
+    <string name="signup">Sign Up</string>
+    <string name="password">Password</string>
+    <string name="hide_password">hide password</string>
+    <string name="show_password">show password</string>
+    <string name="continue_label">continue</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="dismiss">dismiss</string>
+    <string name="or">or</string>
+    <string name="by_signing_up_you_agree_tour_terms_of_service_and_privacy_policy">By signing up you agree tour, Terms of service and Privacy Policy</string>
 </resources>

@@ -10,7 +10,7 @@ import com.android.bloomshows.R
 
 // Set of Material typography styles to start with
 val handlee = FontFamily(
-    Font(R.font.handlee, weight = FontWeight.SemiBold)
+    Font(R.font.handlee, weight = FontWeight.Normal)
 )
 
 val cera_pro = FontFamily(
@@ -39,14 +39,14 @@ val Typography = Typography(
     labelSmall  = TextStyle(
         fontFamily = cera_pro,
         fontWeight = FontWeight.Medium,
-        fontSize = 18.sp,
+        fontSize = MediumTextSize,
         lineHeight = 20.sp,
         letterSpacing = 0.sp
     ),
     titleSmall = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
+        fontSize = 10.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp
     )

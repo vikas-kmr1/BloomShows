@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.PagerState
@@ -26,7 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.bloomshows.ui.theme.BloomShowsTheme
-import com.android.bloomshows.ui.theme.lightBtnBg
+import com.android.bloomshows.ui.theme.MediumPadding
 import com.android.bloomshows.ui.theme.onBoardCyan
 import com.android.bloomshows.ui.theme.onBoardPink
 import com.android.bloomshows.ui.theme.onBoardYellow
@@ -37,7 +36,7 @@ import kotlinx.coroutines.launch
 fun ButtonWithIndicator(
     modifier: Modifier,
     pagerState: PagerState,
-    color: Color = lightBtnBg,
+    color: Color = Color.LightGray,
     nav_to_login: () -> Unit = {}
 ) {
     val pageInd = pagerState.currentPage
@@ -98,7 +97,7 @@ fun ButtonWithIndicator(
                 .align(Alignment.Center)
 
                 .padding(6.dp)
-                .clip(RoundedCornerShape(20.dp)),
+                .clip(RoundedCornerShape(MediumPadding)),
             colors = IconButtonDefaults.iconButtonColors(containerColor = color),
             interactionSource = MutableInteractionSource()
         ) {

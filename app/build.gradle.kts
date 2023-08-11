@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.android.bloomshows"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.android.bloomshows"
-        minSdk = 24
-        targetSdk = 33
+        minSdk = 28
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -82,10 +82,8 @@ dependencies {
     implementation("com.airbnb.android:lottie-compose:5.2.0")
     //material Icons
     implementation("androidx.compose.material:material-icons-extended")
-    //google fonts
-    implementation("androidx.compose.ui:ui-text-google-fonts:1.4.0")
 
-    //core-splash-
-    //implementation("androidx.core:core-splashscreen:1.0.0")
+//    //core-splash-
+//    implementation("androidx.core:core-splashscreen:1.0.1")
 
 }
