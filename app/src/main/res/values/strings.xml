@@ -19,4 +19,9 @@
     <string name="or">or</string>
     <string name="by_signing_up_you_agree_tour_terms_of_service_and_privacy_policy">By signing up you agree tour, Terms of service and Privacy Policy</string>
     <string name="bloom_shows_logo">bloom-shows logo</string>
+    <string name="all_fields_are_mandatory">all fields are mandatory</string>
+    <string name="at_least_8_characters">At least 8 characters</string>
+    <string name="at_least_1_number">At least 1 number</string>
+    <string name="both_both_upper_and_lower_case_letters">Both both upper and lower case letters</string>
+    <string name="agreeging_to_the_terms_of_service_and_privacy_policy_with_the_provider">agreeging to the Terms of service and Privacy Policy with the provider</string>
 </resources>

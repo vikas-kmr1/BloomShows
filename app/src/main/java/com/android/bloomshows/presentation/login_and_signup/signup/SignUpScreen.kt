@@ -1,11 +1,9 @@
-package com.android.bloomshows.presentation.login_and_signup.login
+package com.android.bloomshows.presentation.login_and_signup.signup
 
 import EmailState
 import EmailStateSaver
 import HyperlinkText
 import PasswordState
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,19 +15,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,12 +40,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,19 +58,17 @@ import com.android.bloomshows.ui.components.Email
 import com.android.bloomshows.ui.components.ErrorSnackbar
 import com.android.bloomshows.ui.components.Password
 import com.android.bloomshows.ui.theme.BloomShowsTheme
-import com.android.bloomshows.ui.theme.ExtraSmallElevation
-import com.android.bloomshows.ui.theme.ExtraSmallPadding
 import com.android.bloomshows.ui.theme.MediumPadding
 import com.android.bloomshows.ui.theme.MediumTextSize
+import com.android.bloomshows.ui.theme.SemiMediumIcon
 import com.android.bloomshows.ui.theme.SemiMediumTextSize
 import com.android.bloomshows.ui.theme.SmallPadding
-import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(
+fun SignUpScreen(
     email: String?,
-    onLogInSubmitted: (email: String, password: String) -> Unit,
-    navToSignup: () -> Unit = {},
+    onSignUpSubmitted: (name: String, email: String, password: String) -> Unit,
+    navToLogin: () -> Unit = {},
 
     ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -97,51 +98,13 @@ fun LoginScreen(
             ),
         )
 
-        //Google and facebook logins
-        LoginWithGroup()
-
-        Text(
-            text = stringResource(R.string.or_continue_with_email),
-            color = Color.Gray,
-            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Normal)
-        )
-
-        //email and password fields
-        LoginInputFields(email = email, onLogInSubmitted = onLogInSubmitted)
-
-        TextButton(
-            //TODO handle snack bar snackBar accordingly
-            onClick = {
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = snackbarErrorText,
-                        actionLabel = snackbarActionLabel
-                    )
-                }
-            },
-            modifier = Modifier.fillMaxWidth().padding(horizontal = MediumPadding),
-            shape = MaterialTheme.shapes.small,
-        ) {
-            Text(
-                text = stringResource(R.string.forgot_password),
-                style = MaterialTheme.typography.labelLarge.copy(
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = MediumTextSize,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            )
-        }
-
-        Text(
-            text = stringResource(R.string.or),
-            color = Color.Gray,
-            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Normal)
-        )
+        //name, email and password fields
+        SignUpInputFields(email = email, onSignUpSubmitted = onSignUpSubmitted)
 
         //Spacer(modifier = Modifier.height(16.dp))
         //TODO nav to signup
         OutlinedButton(
-            onClick = { navToSignup() },
+            onClick = { navToLogin() },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = MediumPadding),
@@ -152,7 +115,7 @@ fun LoginScreen(
             Text(
                 modifier = Modifier,
                 textAlign = TextAlign.Center,
-                text = stringResource(R.string.signup),
+                text = stringResource(R.string.login),
                 style = MaterialTheme.typography.labelLarge.copy(
                     fontWeight = FontWeight.Bold,
                     fontSize = MediumTextSize,
@@ -161,7 +124,7 @@ fun LoginScreen(
             )
         }
 
-        PolicyAndTerms()
+
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -175,99 +138,42 @@ fun LoginScreen(
 
 
 @Composable
-private fun LoginWithGroup(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(SmallPadding),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        //Google login
-        ElevatedCard(
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = MediumPadding),
-            elevation = CardDefaults.cardElevation(ExtraSmallElevation),
-            shape = MaterialTheme.shapes.small,
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth()
-                    .clickable(onClick = {})
-                    .align(Alignment.CenterHorizontally).padding(SmallPadding),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    modifier = Modifier.padding(end = ExtraSmallPadding),
-                    painter = painterResource(R.drawable.logo_google),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = stringResource(R.string.login_with_google)
-                )
-                Text(
-                    text = stringResource(R.string.login_with_google),
-                    style = MaterialTheme.typography.labelLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
-                    )
-                )
-            }
-        }
-
-        //FaceBook login
-        ElevatedCard(
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = MediumPadding),
-            elevation = CardDefaults.cardElevation(ExtraSmallElevation),
-            shape = MaterialTheme.shapes.small,
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth()
-                    .clickable(onClick = {})
-                    .align(Alignment.CenterHorizontally).padding(SmallPadding),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Image(
-                    modifier = Modifier.padding(end = ExtraSmallPadding),
-                    painter = painterResource(R.drawable.logo_facebook),
-                    contentDescription = stringResource(R.string.login_with_facebook),
-                )
-                Text(
-                    text = stringResource(R.string.login_with_facebook),
-                    style = MaterialTheme.typography.labelLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = MediumTextSize
-                    )
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun LoginInputFields(
+private fun SignUpInputFields(
     email: String?,
-    onLogInSubmitted: (email: String, password: String) -> Unit,
+    onSignUpSubmitted: (name: String, email: String, password: String) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(horizontal = MediumPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
+        Text(
+            text = stringResource(R.string.all_fields_are_mandatory),
+            color = Color.Gray,
+            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Normal)
+        )
+        //TODO handle name ,email,password states
         val focusRequester = remember { FocusRequester() }
         val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
             mutableStateOf(EmailState(email))
         }
+        val nameState by rememberSaveable(stateSaver = EmailStateSaver) {
+            mutableStateOf(EmailState(email))
+        }
+
+        Email(
+            label = "name",
+            emailState = nameState,
+            onImeAction = { focusRequester.requestFocus() })
         Email(emailState, onImeAction = { focusRequester.requestFocus() })
 
-        //Spacer(modifier = Modifier.height(16.dp))
 
         val passwordState = remember { PasswordState() }
 
         //TODO authentication and user -credential verification
         val onSubmit = {
             if (emailState.isValid && passwordState.isValid) {
-                onLogInSubmitted(emailState.text, passwordState.text)
+                onSignUpSubmitted(nameState.text, emailState.text, passwordState.text)
             }
         }
         Password(
@@ -276,6 +182,28 @@ private fun LoginInputFields(
             modifier = Modifier.focusRequester(focusRequester),
             onImeAction = { onSubmit() }
         )
+        Password(
+            label = stringResource(R.string.password),
+            passwordState = passwordState,
+            modifier = Modifier.focusRequester(focusRequester),
+            onImeAction = { onSubmit() }
+        )
+
+        //validating password pattern
+        Spacer(modifier = Modifier.height(SmallPadding))
+        VALIDATE_PATTERN_CONDITIONS.forEachIndexed { index: Int, strResId: Int ->
+            ValidatePattern(label = stringResource(strResId))
+        }
+
+
+        Spacer(modifier = Modifier.height(SmallPadding))
+        val (checkedState, onStateChange) = remember { mutableStateOf(true) }
+
+        PolicyAndTerms(
+            checkState = checkedState,
+            onStateChange = onStateChange
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = { onSubmit() },
@@ -284,6 +212,7 @@ private fun LoginInputFields(
             shape = MaterialTheme.shapes.small,
             enabled = emailState.isValid && passwordState.isValid
         )
+
         {
             Text(
                 modifier = Modifier,
@@ -301,29 +230,81 @@ private fun LoginInputFields(
     }
 }
 
+@Composable
+private fun ValidatePattern(
+    label: String,
+    icon: ImageVector = Icons.Filled.CheckCircle
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(
+            SmallPadding, Alignment.Start
+        )
+    ) {
+        Icon(
+            imageVector = icon,
+            tint = Color.Gray,
+            modifier = Modifier.size(SemiMediumIcon),
+            contentDescription = label + "icon"
+        )
+        Text(
+            text = label, color = Color.Gray,
+            style = MaterialTheme.typography.labelSmall.copy(
+                fontSize = SemiMediumTextSize,
+                fontWeight = FontWeight.Normal
+            )
+        )
+    }
+}
 
 @Composable
-private fun PolicyAndTerms() {
-    HyperlinkText(
-        fullText = stringResource(R.string.by_signing_up_you_agree_tour_terms_of_service_and_privacy_policy),
-        hyperLinks = mutableMapOf(
-            "Terms of service" to "https://google.com",
-            "Privacy Policy" to "https://google.com"
-        ),
-        linkTextColor = MaterialTheme.colorScheme.primary,
-        fontSize = SemiMediumTextSize
-    )
+private fun PolicyAndTerms(checkState: Boolean, onStateChange: (Boolean) -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(SmallPadding,Alignment.Start),
+    ) {
+        Checkbox(
+            modifier = Modifier.size(SemiMediumIcon),
+            checked = checkState,
+            onCheckedChange = { onStateChange(!checkState) }
+        )
+
+        HyperlinkText(
+            fullText = stringResource(R.string.agreeging_to_the_terms_of_service_and_privacy_policy_with_the_provider),
+            hyperLinks = mutableMapOf(
+                "Terms of service" to "https://google.com",
+                "Privacy Policy" to "https://google.com"
+            ),
+            linkTextColor = MaterialTheme.colorScheme.primary,
+            fontSize = SemiMediumTextSize,
+            textStyle = MaterialTheme.typography.labelSmall.copy(
+                textAlign = TextAlign.Justify,
+                fontWeight = FontWeight.Normal,
+                color = Color.Gray
+            )
+        )
+
+    }
+
 }
+
+private val VALIDATE_PATTERN_CONDITIONS = listOf(
+    R.string.at_least_8_characters,
+    R.string.at_least_1_number,
+    R.string.both_both_upper_and_lower_case_letters,
+)
 
 
 @Preview
 @Composable
-fun PreviewLoginScreen() {
+fun PreviewSignUpScreen() {
 
     BloomShowsTheme {
-        LoginScreen(
+        SignUpScreen(
             email = null,
-            onLogInSubmitted = { _, _ -> },
+            onSignUpSubmitted = { _, _, _ -> },
         )
     }
 }

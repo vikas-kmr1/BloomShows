@@ -1,8 +1,6 @@
 package com.android.bloomshows.presentation.on_boarding
 
-import android.graphics.drawable.Drawable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import com.android.bloomshows.R
 import com.android.bloomshows.ui.theme.onBoardCyan
 import com.android.bloomshows.ui.theme.onBoardPink

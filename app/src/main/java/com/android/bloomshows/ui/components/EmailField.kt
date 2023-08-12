@@ -22,7 +22,8 @@ import androidx.compose.ui.text.input.KeyboardType
 fun Email(
     emailState: TextFieldState = remember { EmailState() },
     imeAction: ImeAction = ImeAction.Next,
-    onImeAction: () -> Unit = {}
+    onImeAction: () -> Unit = {},
+    label:String = "Email"
 ) {
     OutlinedTextField(
         value = emailState.text,
@@ -31,7 +32,7 @@ fun Email(
         },
         label = {
             Text(
-                text = "Email",
+                text = label,
                 style = MaterialTheme.typography.bodyMedium,
             )
         },

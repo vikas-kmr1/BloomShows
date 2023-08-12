@@ -21,7 +21,7 @@ private fun passwordAndConfirmationValid(password: String, confirmedPassword: St
 }
 
 private fun isPasswordValid(password: String): Boolean {
-    return password.length > 3
+    return password.length >= 8
 }
 
 @Suppress("UNUSED_PARAMETER")

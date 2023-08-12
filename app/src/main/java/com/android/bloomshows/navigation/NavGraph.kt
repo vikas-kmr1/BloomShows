@@ -1,11 +1,15 @@
 package com.android.bloomshows.navigation
 
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.android.bloomshows.presentation.login_and_signup.login.LoginRoute
+import com.android.bloomshows.presentation.login_and_signup.signup.SignUpRoute
 import com.android.bloomshows.presentation.on_boarding.OnBoardingScreen
 import com.android.bloomshows.presentation.splash.SplashScreen
 
@@ -17,7 +21,8 @@ fun NavGraph(
     NavHost(
         //TODO change this with the screen you are working on
         // be sure to reset it to splashscreen when you donw
-        startDestination = LoginDestination.route,
+        modifier = Modifier.windowInsetsPadding(androidx.compose.foundation.layout.WindowInsets.systemBars),
+        startDestination = SignUpDestination.route,
         navController = navigationController
     ) {
         composable(route = SplashDestination.route) {
@@ -42,6 +47,7 @@ fun NavGraph(
         composable(route = LoginDestination.route) {
             LoginRoute(
                 onNavigateToSignUp = {
+                    navigationController.popBackStack()
                     navigationController.navigate(route = SignUpDestination.route)
                 },
                 onLogInSubmitted = {},
@@ -49,7 +55,13 @@ fun NavGraph(
         }
 
         composable(route = SignUpDestination.route) {
-
+            SignUpRoute(
+                onNavigateToLogin = {
+                    navigationController.popBackStack()
+                    navigationController.navigate(route = LoginDestination.route)
+                },
+                onSignUpSubmitted = {},
+            )
         }
         composable(route = ForgetCredentialsDestination.route) {
 

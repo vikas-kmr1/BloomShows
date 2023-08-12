@@ -40,7 +40,6 @@ import com.android.bloomshows.ui.theme.BloomShowsTheme
 import com.android.bloomshows.ui.theme.MediumPadding
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun OnBoardingScreen(
