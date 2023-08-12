@@ -7,7 +7,7 @@ fun LoginRoute(
 email: String? = null,
 onLogInSubmitted: () -> Unit,
 onNavigateToSignUp:()->Unit,
-onNavUp: () -> Unit,
+
 
 ) {
     //val signInViewModel: SignInViewModel = viewModel(factory = SignInViewModelFactory())
@@ -16,7 +16,6 @@ onNavUp: () -> Unit,
         onLogInSubmitted = { email, password ->
             // signInViewModel.signIn(email, password, onSignInSubmitted)
         },
-        onNavUp = onNavUp,
         navToSignup = onNavigateToSignUp
     )
 }

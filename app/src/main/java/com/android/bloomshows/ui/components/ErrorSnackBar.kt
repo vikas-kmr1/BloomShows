@@ -1,4 +1,4 @@
-package com.android.bloomshows.ui.compoents
+package com.android.bloomshows.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

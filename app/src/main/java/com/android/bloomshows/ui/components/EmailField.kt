@@ -1,4 +1,4 @@
-package com.android.bloomshows.ui.compoents
+package com.android.bloomshows.ui.components
 
 import EmailState
 import TextFieldState

@@ -34,8 +34,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.bloomshows.R
-import com.android.bloomshows.ui.compoents.ButtonWithIndicator
-import com.android.bloomshows.ui.compoents.WormPageIndicator
+import com.android.bloomshows.ui.components.ButtonWithIndicator
+import com.android.bloomshows.ui.components.WormPageIndicator
 import com.android.bloomshows.ui.theme.BloomShowsTheme
 import com.android.bloomshows.ui.theme.MediumPadding
 

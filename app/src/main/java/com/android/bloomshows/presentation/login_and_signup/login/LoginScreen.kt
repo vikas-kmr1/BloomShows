@@ -19,8 +19,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -47,12 +49,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.bloomshows.R
-import com.android.bloomshows.ui.compoents.Email
-import com.android.bloomshows.ui.compoents.ErrorSnackbar
-import com.android.bloomshows.ui.compoents.LoginInSignUpTopAppBar
-import com.android.bloomshows.ui.compoents.Password
+import com.android.bloomshows.ui.components.BloomshowsBranding
+import com.android.bloomshows.ui.components.Email
+import com.android.bloomshows.ui.components.ErrorSnackbar
+import com.android.bloomshows.ui.components.Password
 import com.android.bloomshows.ui.theme.BloomShowsTheme
+import com.android.bloomshows.ui.theme.ExtraSmallElevation
+import com.android.bloomshows.ui.theme.ExtraSmallPadding
 import com.android.bloomshows.ui.theme.MediumPadding
+import com.android.bloomshows.ui.theme.MediumTextSize
 import com.android.bloomshows.ui.theme.SmallPadding
 import kotlinx.coroutines.launch
 
@@ -60,7 +65,6 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
     email: String?,
     onLogInSubmitted: (email: String, password: String) -> Unit,
-    onNavUp: () -> Unit,
     navToSignup: () -> Unit = {},
 
     ) {
@@ -77,7 +81,11 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround
     ) {
-        LoginInSignUpTopAppBar(onNavUp = onNavUp)
+        BloomshowsBranding(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentSize(Alignment.Center)
+        )
 
         Text(
             modifier = Modifier.padding(bottom = MediumPadding),
@@ -88,6 +96,7 @@ fun LoginScreen(
             ),
         )
 
+        //Google and facebook logins
         LoginWithGroup()
 
         Text(
@@ -96,10 +105,11 @@ fun LoginScreen(
             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Normal)
         )
 
+        //email and password fileds
         LoginInputFields(email = email, onLogInSubmitted = onLogInSubmitted)
 
         TextButton(
-            //handle snack bar snackBar
+            //TODO handle snack bar snackBar accordingly
             onClick = {
                 scope.launch {
                     snackbarHostState.showSnackbar(
@@ -109,13 +119,14 @@ fun LoginScreen(
                 }
             },
             modifier = Modifier.fillMaxWidth().padding(horizontal = MediumPadding),
-            shape = MaterialTheme.shapes.small
+            shape = MaterialTheme.shapes.small,
         ) {
             Text(
                 text = stringResource(R.string.forgot_password),
                 style = MaterialTheme.typography.labelLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = MediumTextSize,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             )
         }
@@ -143,7 +154,8 @@ fun LoginScreen(
                 text = stringResource(R.string.signup),
                 style = MaterialTheme.typography.labelLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
+                    fontSize = MediumTextSize,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             )
         }
@@ -168,9 +180,11 @@ private fun LoginWithGroup(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(SmallPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        //Google login
         ElevatedCard(
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = MediumPadding),
+            elevation = CardDefaults.cardElevation(ExtraSmallElevation),
             shape = MaterialTheme.shapes.small,
         ) {
             Row(
@@ -181,7 +195,7 @@ private fun LoginWithGroup(modifier: Modifier = Modifier) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    modifier = Modifier.padding(end = 5.dp),
+                    modifier = Modifier.padding(end = ExtraSmallPadding),
                     painter = painterResource(R.drawable.logo_google),
                     contentScale = ContentScale.Crop,
                     contentDescription = stringResource(R.string.login_with_google)
@@ -195,9 +209,12 @@ private fun LoginWithGroup(modifier: Modifier = Modifier) {
                 )
             }
         }
+
+        //FaceBook login
         ElevatedCard(
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = MediumPadding),
+            elevation = CardDefaults.cardElevation(ExtraSmallElevation),
             shape = MaterialTheme.shapes.small,
         ) {
             Row(
@@ -207,8 +224,9 @@ private fun LoginWithGroup(modifier: Modifier = Modifier) {
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
                 Image(
-                    modifier = Modifier.padding(end = 5.dp),
+                    modifier = Modifier.padding(end = ExtraSmallPadding),
                     painter = painterResource(R.drawable.logo_facebook),
                     contentDescription = stringResource(R.string.login_with_facebook),
                 )
@@ -216,13 +234,11 @@ private fun LoginWithGroup(modifier: Modifier = Modifier) {
                     text = stringResource(R.string.login_with_facebook),
                     style = MaterialTheme.typography.labelLarge.copy(
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        fontSize = MediumTextSize
                     )
                 )
             }
         }
-
-
     }
 }
 
@@ -263,8 +279,7 @@ private fun LoginInputFields(
         Button(
             onClick = { onSubmit() },
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
+                .fillMaxWidth(),
             shape = MaterialTheme.shapes.small,
             enabled = emailState.isValid && passwordState.isValid
         )
@@ -275,7 +290,7 @@ private fun LoginInputFields(
                 text = stringResource(R.string.continue_label),
                 style = MaterialTheme.typography.labelLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
+                    fontSize = MediumTextSize,
                     color = if (emailState.isValid && passwordState.isValid) MaterialTheme.colorScheme.onBackground
                     else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f)
                 )
@@ -308,7 +323,6 @@ fun PreviewLoginScreen() {
         LoginScreen(
             email = null,
             onLogInSubmitted = { _, _ -> },
-            onNavUp = {},
         )
     }
 }

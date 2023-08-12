@@ -1,4 +1,4 @@
-package com.android.bloomshows.ui.compoents
+package com.android.bloomshows.ui.components
 
 import TextFieldState
 import androidx.compose.foundation.layout.Row

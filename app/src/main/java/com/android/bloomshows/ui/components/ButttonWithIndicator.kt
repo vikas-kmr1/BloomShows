@@ -1,4 +1,4 @@
-package com.android.bloomshows.ui.compoents
+package com.android.bloomshows.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 fun ButtonWithIndicator(
     modifier: Modifier,
     pagerState: PagerState,
-    color: Color = Color.LightGray,
+    color: Color = Color(0xFFFAF4F4),
     nav_to_login: () -> Unit = {}
 ) {
     val pageInd = pagerState.currentPage

@@ -17,7 +17,7 @@ fun NavGraph(
     NavHost(
         //TODO change this with the screen you are working on
         // be sure to reset it to splashscreen when you donw
-        startDestination = SplashDestination.route,
+        startDestination = LoginDestination.route,
         navController = navigationController
     ) {
         composable(route = SplashDestination.route) {
@@ -35,7 +35,6 @@ fun NavGraph(
 
         composable(route = OnboardingDestination.route) {
             OnBoardingScreen(navigate_to_login = {
-                navigationController.popBackStack()
                 navigationController.navigate(LoginDestination.route)
             })
         }
@@ -46,7 +45,6 @@ fun NavGraph(
                     navigationController.navigate(route = SignUpDestination.route)
                 },
                 onLogInSubmitted = {},
-                onNavUp = navigationController::navigateUp,
             )
         }
 

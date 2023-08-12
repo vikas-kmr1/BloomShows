@@ -13,9 +13,10 @@
     <string name="password">Password</string>
     <string name="hide_password">hide password</string>
     <string name="show_password">show password</string>
-    <string name="continue_label">continue</string>
+    <string name="continue_label">Continue</string>
     <string name="forgot_password">Forgot password</string>
     <string name="dismiss">dismiss</string>
     <string name="or">or</string>
     <string name="by_signing_up_you_agree_tour_terms_of_service_and_privacy_policy">By signing up you agree tour, Terms of service and Privacy Policy</string>
+    <string name="bloom_shows_logo">bloom-shows logo</string>
 </resources>
