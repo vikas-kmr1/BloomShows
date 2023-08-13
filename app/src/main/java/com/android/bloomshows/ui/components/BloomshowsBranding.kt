@@ -24,7 +24,7 @@ import com.android.bloomshows.ui.theme.handlee
 
 @Composable
 fun BloomshowsBranding(modifier: Modifier = Modifier) {
-        Row(
+        Row(modifier = modifier,
             horizontalArrangement = Arrangement.Center
         ) {
             Image(

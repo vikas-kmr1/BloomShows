@@ -14,7 +14,7 @@ internal val onBoardPink = Color(0xFFF5B4C7)
 
 
 
-val md_theme_light_primary = BlueDeficient //Color(0xFF825500)
+val md_theme_light_primary = BlueDeficient //Color(0xFF82550)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
 val md_theme_light_primaryContainer = Color(0xFFFFDDB3)
 val md_theme_light_onPrimaryContainer = Color(0xFF291800)
@@ -47,7 +47,7 @@ val md_theme_light_scrim = Color(0xFF000000)
 
 
 val md_theme_dark_primary = BlueDeficient//Color(0xFFFFB951)
-val md_theme_dark_onPrimary = Color(0xFF452B00)
+val md_theme_dark_onPrimary= Color(0xFF452B00)
 val md_theme_dark_primaryContainer = Color(0xFF633F00)
 val md_theme_dark_onPrimaryContainer = Color(0xFFFFDDB3)
 val md_theme_dark_secondary = Color(0xFFDDC2A1)

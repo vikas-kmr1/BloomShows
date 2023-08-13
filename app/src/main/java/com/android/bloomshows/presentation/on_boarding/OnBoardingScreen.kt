@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -76,7 +78,8 @@ fun OnBoardingScreen(
             //TODO add drawables islustrations
             Box(
                 modifier = Modifier.fillMaxSize()
-                    .background(slides[pagerState.currentPage].backgroundColor),
+                    .background(slides[pagerState.currentPage].backgroundColor)
+                ,
                 contentAlignment = Alignment.Center
             ) {}
         }
@@ -104,7 +107,9 @@ fun OnBoardingScreen(
                 Modifier
             )
         }
-        Box(modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter).padding(MediumPadding)) {
+        Box(modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter)
+            .windowInsetsPadding(WindowInsets.navigationBars)
+            .padding(MediumPadding)) {
             WormPageIndicator(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 totalPages = pageCount,

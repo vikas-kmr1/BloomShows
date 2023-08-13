@@ -7,6 +7,7 @@ fun LoginRoute(
 email: String? = null,
 onLogInSubmitted: () -> Unit,
 onNavigateToSignUp:()->Unit,
+onNavigateToForgot:()->Unit,
 
 
 ) {
@@ -16,6 +17,7 @@ onNavigateToSignUp:()->Unit,
         onLogInSubmitted = { email, password ->
             // signInViewModel.signIn(email, password, onSignInSubmitted)
         },
-        navToSignup = onNavigateToSignUp
+        navToSignup = onNavigateToSignUp,
+        navToForgot = onNavigateToForgot
     )
 }

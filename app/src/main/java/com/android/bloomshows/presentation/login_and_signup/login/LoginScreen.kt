@@ -13,11 +13,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -59,6 +59,7 @@ import com.android.bloomshows.ui.theme.ExtraSmallElevation
 import com.android.bloomshows.ui.theme.ExtraSmallPadding
 import com.android.bloomshows.ui.theme.MediumPadding
 import com.android.bloomshows.ui.theme.MediumTextSize
+import com.android.bloomshows.ui.theme.SemiLargeTextSize
 import com.android.bloomshows.ui.theme.SemiMediumTextSize
 import com.android.bloomshows.ui.theme.SmallPadding
 import kotlinx.coroutines.launch
@@ -68,7 +69,7 @@ fun LoginScreen(
     email: String?,
     onLogInSubmitted: (email: String, password: String) -> Unit,
     navToSignup: () -> Unit = {},
-
+    navToForgot: () -> Unit = {},
     ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -78,9 +79,12 @@ fun LoginScreen(
 
     Column(
         modifier = Modifier.fillMaxSize()
+            .windowInsetsPadding(WindowInsets.systemBars)
+            .padding(horizontal = MediumPadding)
+            .padding(top = MediumPadding)
             .scrollable(orientation = Orientation.Vertical, state = rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(SmallPadding,Alignment.Top)
+        verticalArrangement = Arrangement.spacedBy(SmallPadding, Alignment.Top)
     ) {
         BloomshowsBranding(
             modifier = Modifier
@@ -89,11 +93,11 @@ fun LoginScreen(
         )
 
         Text(
-            modifier = Modifier.padding(bottom = MediumPadding),
+            modifier = Modifier,
             text = stringResource(R.string.welcome_to_bloomshows),
             style = MaterialTheme.typography.labelLarge.copy(
                 fontWeight = FontWeight.Bold,
-                fontSize = 24.sp
+                fontSize = SemiLargeTextSize
             ),
         )
 
@@ -112,14 +116,15 @@ fun LoginScreen(
         TextButton(
             //TODO handle snack bar snackBar accordingly
             onClick = {
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = snackbarErrorText,
-                        actionLabel = snackbarActionLabel
-                    )
-                }
+                      navToForgot()
+//                scope.launch {
+//                    snackbarHostState.showSnackbar(
+//                        message = snackbarErrorText,
+//                        actionLabel = snackbarActionLabel
+//                    )
+//                }
             },
-            modifier = Modifier.fillMaxWidth().padding(horizontal = MediumPadding),
+            modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.small,
         ) {
             Text(
@@ -143,8 +148,7 @@ fun LoginScreen(
         OutlinedButton(
             onClick = { navToSignup() },
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = MediumPadding),
+                .fillMaxWidth(),
             shape = MaterialTheme.shapes.small,
 
             )
@@ -183,8 +187,7 @@ private fun LoginWithGroup(modifier: Modifier = Modifier) {
     ) {
         //Google login
         ElevatedCard(
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = MediumPadding),
+            modifier = Modifier.fillMaxWidth(),
             elevation = CardDefaults.cardElevation(ExtraSmallElevation),
             shape = MaterialTheme.shapes.small,
         ) {
@@ -213,8 +216,7 @@ private fun LoginWithGroup(modifier: Modifier = Modifier) {
 
         //FaceBook login
         ElevatedCard(
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = MediumPadding),
+            modifier = Modifier.fillMaxWidth(),
             elevation = CardDefaults.cardElevation(ExtraSmallElevation),
             shape = MaterialTheme.shapes.small,
         ) {
@@ -249,7 +251,7 @@ private fun LoginInputFields(
     onLogInSubmitted: (email: String, password: String) -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = MediumPadding),
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -304,15 +306,17 @@ private fun LoginInputFields(
 
 @Composable
 private fun PolicyAndTerms() {
-    HyperlinkText(
-        fullText = stringResource(R.string.by_signing_up_you_agree_tour_terms_of_service_and_privacy_policy),
-        hyperLinks = mutableMapOf(
-            "Terms of service" to "https://google.com",
-            "Privacy Policy" to "https://google.com"
-        ),
-        linkTextColor = MaterialTheme.colorScheme.primary,
-        fontSize = SemiMediumTextSize
-    )
+
+        HyperlinkText(
+            fullText = stringResource(R.string.by_signing_up_you_agree_tour_terms_of_service_and_privacy_policy),
+            hyperLinks = mutableMapOf(
+                "Terms of service" to "https://google.com",
+                "Privacy Policy" to "https://google.com"
+            ),
+            linkTextColor = MaterialTheme.colorScheme.primary,
+            fontSize = SemiMediumTextSize
+        )
+
 }
 
 
@@ -324,6 +328,7 @@ fun PreviewLoginScreen() {
         LoginScreen(
             email = null,
             onLogInSubmitted = { _, _ -> },
+            navToForgot = {  }
         )
     }
 }

@@ -14,7 +14,7 @@
     <string name="hide_password">hide password</string>
     <string name="show_password">show password</string>
     <string name="continue_label">Continue</string>
-    <string name="forgot_password">Forgot password</string>
+    <string name="forgot_password">Forgot Password</string>
     <string name="dismiss">dismiss</string>
     <string name="or">or</string>
     <string name="by_signing_up_you_agree_tour_terms_of_service_and_privacy_policy">By signing up you agree tour, Terms of service and Privacy Policy</string>
@@ -24,4 +24,6 @@
     <string name="at_least_1_number">At least 1 number</string>
     <string name="both_both_upper_and_lower_case_letters">Both both upper and lower case letters</string>
     <string name="agreeging_to_the_terms_of_service_and_privacy_policy_with_the_provider">agreeging to the Terms of service and Privacy Policy with the provider</string>
+    <string name="enter_your_email_to_reset_password">Enter your email to reset password</string>
+    <string name="cancel">Cancel</string>
 </resources>

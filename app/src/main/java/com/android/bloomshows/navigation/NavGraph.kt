@@ -8,6 +8,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.android.bloomshows.presentation.login_and_signup.forgot_password.Forgot_password_Screen
+import com.android.bloomshows.presentation.login_and_signup.forgot_password.Forgot_password_route
 import com.android.bloomshows.presentation.login_and_signup.login.LoginRoute
 import com.android.bloomshows.presentation.login_and_signup.signup.SignUpRoute
 import com.android.bloomshows.presentation.on_boarding.OnBoardingScreen
@@ -21,8 +23,8 @@ fun NavGraph(
     NavHost(
         //TODO change this with the screen you are working on
         // be sure to reset it to splashscreen when you donw
-        modifier = Modifier.windowInsetsPadding(androidx.compose.foundation.layout.WindowInsets.systemBars),
-        startDestination = SignUpDestination.route,
+        modifier = Modifier,
+        startDestination = SplashDestination.route,
         navController = navigationController
     ) {
         composable(route = SplashDestination.route) {
@@ -51,6 +53,7 @@ fun NavGraph(
                     navigationController.navigate(route = SignUpDestination.route)
                 },
                 onLogInSubmitted = {},
+                onNavigateToForgot = {navigationController.navigate(ForgetCredentialsDestination.route)}
             )
         }
 
@@ -64,7 +67,9 @@ fun NavGraph(
             )
         }
         composable(route = ForgetCredentialsDestination.route) {
-
+            Forgot_password_route(
+                onNavigateUp = {navigationController.navigateUp()}
+            )
         }
         composable(route = HomeDestination.route) {
 

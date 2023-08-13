@@ -4,24 +4,22 @@ import EmailState
 import EmailStateSaver
 import HyperlinkText
 import PasswordState
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
@@ -29,7 +27,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,13 +37,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,6 +55,7 @@ import com.android.bloomshows.ui.components.Password
 import com.android.bloomshows.ui.theme.BloomShowsTheme
 import com.android.bloomshows.ui.theme.MediumPadding
 import com.android.bloomshows.ui.theme.MediumTextSize
+import com.android.bloomshows.ui.theme.SemiLargeTextSize
 import com.android.bloomshows.ui.theme.SemiMediumIcon
 import com.android.bloomshows.ui.theme.SemiMediumTextSize
 import com.android.bloomshows.ui.theme.SmallPadding
@@ -76,10 +72,12 @@ fun SignUpScreen(
 
     val snackbarErrorText = "message"
     val snackbarActionLabel = "dimiss"
-
     Column(
         modifier = Modifier.fillMaxSize()
-            .scrollable(orientation = Orientation.Vertical, state = rememberScrollState()),
+            .windowInsetsPadding(WindowInsets.systemBars)
+            .verticalScroll(state = rememberScrollState())
+            .padding(horizontal = MediumPadding)
+            .padding(top = MediumPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(SmallPadding,Alignment.Top)
     ) {
@@ -94,7 +92,7 @@ fun SignUpScreen(
             text = stringResource(R.string.welcome_to_bloomshows),
             style = MaterialTheme.typography.labelLarge.copy(
                 fontWeight = FontWeight.Bold,
-                fontSize = 24.sp
+                fontSize = SemiLargeTextSize
             ),
         )
 
@@ -106,8 +104,7 @@ fun SignUpScreen(
         OutlinedButton(
             onClick = { navToLogin() },
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = MediumPadding),
+                .fillMaxWidth(),
             shape = MaterialTheme.shapes.small,
 
             )
@@ -143,7 +140,7 @@ private fun SignUpInputFields(
     onSignUpSubmitted: (name: String, email: String, password: String) -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = MediumPadding),
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

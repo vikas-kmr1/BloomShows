@@ -14,7 +14,7 @@ internal val ExtraSmallTextSize = 8.sp
 internal val SmallTextSize = 12.sp
 internal val SemiMediumTextSize = 15.sp
 internal val MediumTextSize = 18.sp
-internal val SemiLargeTextSize = 22.sp
+internal val SemiLargeTextSize = 24.sp
 internal val LargeTextSize = 40.sp
 
 

@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -34,7 +36,8 @@ fun SplashScreen(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .windowInsetsPadding(androidx.compose.foundation.layout.WindowInsets.systemBars),
         contentAlignment = Alignment.Center
     ) {
         SplashLogoBloomShows(navigate_to_home, navigate_to_onboarding)
