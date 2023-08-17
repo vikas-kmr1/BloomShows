@@ -46,6 +46,7 @@ import com.android.bloomshows.presentation.on_boarding.TopContent
 import com.android.bloomshows.ui.components.ButtonWithIndicator
 import com.android.bloomshows.ui.components.WormPageIndicator
 import com.android.bloomshows.ui.theme.MediumPadding
+import com.android.bloomshows.ui.theme.SmallPadding
 import kotlin.math.absoluteValue
 import kotlin.math.sqrt
 
@@ -84,7 +85,8 @@ fun CircleRevealPager(
                         shadowElevation = 20f
                         shape = CirclePath(
                             progress = 1f - endOffset.absoluteValue,
-                            origin = Offset( // set the intial position, from where the reveal shouls start
+                            origin = Offset(
+                                // set the intial position, from where the reveal shouls start
                                 size.width,
                                 size.height,//set this to offsetY, to start the revel,at the point the user touched
                             )
@@ -106,7 +108,8 @@ fun CircleRevealPager(
                 Box(modifier = Modifier.fillMaxSize().background(slides[page].backgroundColor))
                 Box(modifier = Modifier.fillMaxSize()) {
                     TopContent(
-                        modifier = Modifier.fillMaxWidth().align(Alignment.TopCenter).offset(y = 30.dp)
+                        modifier = Modifier.fillMaxWidth().align(Alignment.TopCenter)
+                            .offset(y = 30.dp)
                             .windowInsetsPadding(WindowInsets.statusBars),
                         navigate_to_login = { navigate_to_login() },
                         pagerState.currentPage
@@ -114,13 +117,14 @@ fun CircleRevealPager(
 
 
                     Column(
-                        modifier = Modifier.fillMaxWidth().offset(y = 60.dp),
+                        modifier = Modifier.align(Alignment.Center).fillMaxWidth()
+                            .offset(y = 10.dp),
                         verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.Start
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Image(
-                            modifier = Modifier,
-                            contentScale = ContentScale.Fit,
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = SmallPadding),
+                            contentScale = ContentScale.FillWidth,
                             painter = painterResource(slides[pagerState.currentPage].illustration),
                             contentDescription = "slide ${pagerState.currentPage} illustrations"
                         )

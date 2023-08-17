@@ -31,7 +31,7 @@ fun NavGraph(
         //TODO change this with the screen you are working on
         // be sure to reset it to splashscreen when you donw
         modifier = Modifier,
-        startDestination = OnboardingDestination.route,
+        startDestination = SplashDestination.route,
         navController = navigationController,
     ) {
         composable(route = SplashDestination.route) {

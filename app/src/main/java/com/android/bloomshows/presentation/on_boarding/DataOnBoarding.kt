@@ -20,21 +20,21 @@ val onBoardingSlides = listOf(
         label = "Welcome to BloomShows" ,
         subLabel =  "Step into a World of Cinematic Delights",
         slideind = 0,
-        illustration = R.drawable.illus_booking,
+        illustration = R.drawable.cinema,
         backgroundColor = onBoardYellow
     ),
     DataOnBoarding(
         label = "Discover Movies and Showtimes" ,
         subLabel =  "Explore, Choose, and Immerse Yourself in Movie Magic",
         slideind = 1,
-        illustration = R.drawable.illus_booking,
+        illustration = R.drawable.booking,
         backgroundColor = onBoardCyan
     ),
     DataOnBoarding(
         label = "Easy Booking and Enjoyment" ,
         subLabel =  "Seamless Booking, Instant Joy – Your Ultimate Movie Experience Awaits",
         slideind = 2,
-        illustration = R.drawable.illus_booking,
+        illustration = R.drawable.enjoying,
         backgroundColor = onBoardPink
     ),
 
