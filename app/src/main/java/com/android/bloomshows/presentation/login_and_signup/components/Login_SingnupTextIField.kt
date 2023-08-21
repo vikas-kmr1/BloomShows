@@ -1,7 +1,7 @@
-package com.android.bloomshows.ui.components
+package com.android.bloomshows.presentation.login_and_signup.components
 
-import EmailState
-import TextFieldState
+import com.android.bloomshows.presentation.login_and_signup.utils.EmailState
+import com.android.bloomshows.presentation.login_and_signup.utils.TextFieldState
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,16 +19,17 @@ import androidx.compose.ui.text.input.KeyboardType
 
 @OptIn(ExperimentalMaterial3Api::class) // OutlinedTextField is experimental in m3
 @Composable
-fun Email(
-    emailState: TextFieldState = remember { EmailState() },
+fun LoginSignupTextField(
+    state: TextFieldState = remember { EmailState() },
     imeAction: ImeAction = ImeAction.Next,
     onImeAction: () -> Unit = {},
     label:String = "Email"
 ) {
     OutlinedTextField(
-        value = emailState.text,
+        value = state.text,
         onValueChange = {
-            emailState.text = it
+            state.text = it
+            state.enableShowErrors()
         },
         label = {
             Text(
@@ -36,27 +37,26 @@ fun Email(
                 style = MaterialTheme.typography.bodyMedium,
             )
         },
-        supportingText = { emailState.getError()?.let { error -> TextFieldError(textError = error) }} ,
+        supportingText = { state.getError()?.let { error -> TextFieldError(textError = error) }} ,
         modifier = Modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                emailState.onFocusChange(focusState.isFocused)
+                state.onFocusChange(focusState.isFocused)
                 if (!focusState.isFocused) {
-                    emailState.enableShowErrors()
+                    state.enableShowErrors()
                 }
             },
         textStyle = MaterialTheme.typography.bodyMedium,
-        isError = emailState.showErrors(),
+        isError = state.showErrors(),
         keyboardOptions = KeyboardOptions.Default.copy(
             imeAction = imeAction,
             keyboardType = KeyboardType.Email
         ),
+        singleLine = true,
         keyboardActions = KeyboardActions(
             onDone = {
                 onImeAction()
             }
         ),
     )
-
-
 }

@@ -1,4 +1,4 @@
-
+package com.android.bloomshows.presentation.login_and_signup.utils
 import java.util.regex.Pattern
 
 // Consider an email valid if there's some text before and after a "@"

@@ -1,9 +1,7 @@
 package com.android.bloomshows.presentation.login_and_signup.signup
 
-import EmailState
-import EmailStateSaver
 import HyperlinkText
-import PasswordState
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +25,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,12 +45,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.android.bloomshows.R
-import com.android.bloomshows.ui.components.BloomshowsBranding
-import com.android.bloomshows.ui.components.Email
-import com.android.bloomshows.ui.components.ErrorSnackbar
-import com.android.bloomshows.ui.components.Password
+import com.android.bloomshows.presentation.login_and_signup.components.LoginSignupTextField
+import com.android.bloomshows.presentation.login_and_signup.components.Password
+import com.android.bloomshows.presentation.login_and_signup.utils.ConfirmPasswordState
+import com.android.bloomshows.presentation.login_and_signup.utils.EmailState
+import com.android.bloomshows.presentation.login_and_signup.utils.EmailStateSaver
+import com.android.bloomshows.presentation.login_and_signup.utils.NameState
+import com.android.bloomshows.presentation.login_and_signup.utils.NameStateSaver
+import com.android.bloomshows.presentation.login_and_signup.utils.PasswordState
+import com.android.bloomshows.ui.common_components.BloomshowsBranding
+import com.android.bloomshows.ui.common_components.ErrorSnackbar
 import com.android.bloomshows.ui.theme.BloomShowsTheme
 import com.android.bloomshows.ui.theme.MediumPadding
 import com.android.bloomshows.ui.theme.MediumTextSize
@@ -59,10 +63,15 @@ import com.android.bloomshows.ui.theme.SemiLargeTextSize
 import com.android.bloomshows.ui.theme.SemiMediumIcon
 import com.android.bloomshows.ui.theme.SemiMediumTextSize
 import com.android.bloomshows.ui.theme.SmallPadding
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun SignUpScreen(
-    email: String?,
+
     onSignUpSubmitted: (name: String, email: String, password: String) -> Unit,
     navToLogin: () -> Unit = {},
 
@@ -79,7 +88,7 @@ fun SignUpScreen(
             .padding(horizontal = MediumPadding)
             .padding(top = MediumPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(SmallPadding,Alignment.Top)
+        verticalArrangement = Arrangement.spacedBy(SmallPadding, Alignment.Top)
     ) {
         BloomshowsBranding(
             modifier = Modifier
@@ -97,7 +106,19 @@ fun SignUpScreen(
         )
 
         //name, email and password fields
-        SignUpInputFields(email = email, onSignUpSubmitted = onSignUpSubmitted)
+        SignUpInputFields(
+            onSignUpSubmitted = onSignUpSubmitted,
+            showSnackBar = { message ->
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = message,
+                        actionLabel = snackbarActionLabel,
+                        duration = SnackbarDuration.Short
+                    )
+
+                }
+            })
+
 
         //Spacer(modifier = Modifier.height(16.dp))
         //TODO nav to signup
@@ -121,7 +142,6 @@ fun SignUpScreen(
             )
         }
 
-
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -136,8 +156,8 @@ fun SignUpScreen(
 
 @Composable
 private fun SignUpInputFields(
-    email: String?,
     onSignUpSubmitted: (name: String, email: String, password: String) -> Unit,
+    showSnackBar: (String) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -152,24 +172,29 @@ private fun SignUpInputFields(
         //TODO handle name ,email,password states
         val focusRequester = remember { FocusRequester() }
         val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
-            mutableStateOf(EmailState(email))
+            mutableStateOf(EmailState())
         }
-        val nameState by rememberSaveable(stateSaver = EmailStateSaver) {
-            mutableStateOf(EmailState(email))
+        val nameState by rememberSaveable(stateSaver = NameStateSaver) {
+            mutableStateOf(NameState())
         }
 
-        Email(
-            label = "name",
-            emailState = nameState,
+        //Name field
+        LoginSignupTextField(
+            label = stringResource(R.string.name),
+            state = nameState,
             onImeAction = { focusRequester.requestFocus() })
-        Email(emailState, onImeAction = { focusRequester.requestFocus() })
+        //email filed
+        LoginSignupTextField(state = emailState, onImeAction = { focusRequester.requestFocus() })
 
 
         val passwordState = remember { PasswordState() }
+        val passwordConfirmState = remember { ConfirmPasswordState(passwordState) }
+
+        val (termsCheckedState, onStateChange) = remember { mutableStateOf(false) }
 
         //TODO authentication and user -credential verification
         val onSubmit = {
-            if (emailState.isValid && passwordState.isValid) {
+            if (emailState.isValid && passwordState.isValid && passwordConfirmState.isValid && nameState.isValid && termsCheckedState) {
                 onSignUpSubmitted(nameState.text, emailState.text, passwordState.text)
             }
         }
@@ -179,31 +204,43 @@ private fun SignUpInputFields(
             modifier = Modifier.focusRequester(focusRequester),
             onImeAction = { onSubmit() }
         )
+        //Confirm password
         Password(
-            label = stringResource(R.string.password),
-            passwordState = passwordState,
+            label = stringResource(R.string.confirm_password),
+            passwordState = passwordConfirmState,
             modifier = Modifier.focusRequester(focusRequester),
             onImeAction = { onSubmit() }
         )
 
         //validating password pattern
         Spacer(modifier = Modifier.height(SmallPadding))
+
+        val validConditions = listOf(
+            passwordState.isMinLength,
+            passwordState.isContainsNumber,
+            passwordState.isContainsSpecial,
+            passwordState.isContainsUpper && passwordState.isContainsLower,
+        )
         VALIDATE_PATTERN_CONDITIONS.forEachIndexed { index: Int, strResId: Int ->
-            ValidatePattern(label = stringResource(strResId))
+            ValidatePattern(label = stringResource(strResId), index = index, validConditions)
         }
 
 
         Spacer(modifier = Modifier.height(SmallPadding))
-        val (checkedState, onStateChange) = remember { mutableStateOf(true) }
 
         PolicyAndTerms(
-            checkState = checkedState,
+            checkState = termsCheckedState,
             onStateChange = onStateChange
         )
 
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { onSubmit() },
+            onClick = {
+                if (!termsCheckedState) {
+                    showSnackBar("Accept Terms and conditions")
+                }
+                onSubmit()
+            },
             modifier = Modifier
                 .fillMaxWidth(),
             shape = MaterialTheme.shapes.small,
@@ -223,15 +260,17 @@ private fun SignUpInputFields(
                 )
             )
         }
-
     }
 }
 
 @Composable
 private fun ValidatePattern(
     label: String,
-    icon: ImageVector = Icons.Filled.CheckCircle
+    index: Int,
+    validCondtions: List<Boolean>,
+    icon: ImageVector = Icons.Filled.CheckCircle,
 ) {
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -241,7 +280,7 @@ private fun ValidatePattern(
     ) {
         Icon(
             imageVector = icon,
-            tint = Color.Gray,
+            tint = if (validCondtions[index]) Color.Green else Color.Gray,
             modifier = Modifier.size(SemiMediumIcon),
             contentDescription = label + "icon"
         )
@@ -260,7 +299,7 @@ private fun PolicyAndTerms(checkState: Boolean, onStateChange: (Boolean) -> Unit
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(SmallPadding,Alignment.Start),
+        horizontalArrangement = Arrangement.spacedBy(SmallPadding, Alignment.Start),
     ) {
         Checkbox(
             modifier = Modifier.size(SemiMediumIcon),
@@ -290,6 +329,7 @@ private fun PolicyAndTerms(checkState: Boolean, onStateChange: (Boolean) -> Unit
 private val VALIDATE_PATTERN_CONDITIONS = listOf(
     R.string.at_least_8_characters,
     R.string.at_least_1_number,
+    R.string.atleast_one_special_character,
     R.string.both_both_upper_and_lower_case_letters,
 )
 
@@ -300,7 +340,6 @@ fun PreviewSignUpScreen() {
 
     BloomShowsTheme {
         SignUpScreen(
-            email = null,
             onSignUpSubmitted = { _, _, _ -> },
         )
     }

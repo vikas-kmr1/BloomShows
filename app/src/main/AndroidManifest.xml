@@ -12,6 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_bloomshows"
         android:supportsRtl="true"
+        android:name=".BloomShowsApplication"
         android:theme="@style/Theme.BloomShows"
         tools:targetApi="31">
         <activity

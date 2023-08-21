@@ -11,9 +11,10 @@ import androidx.core.view.WindowCompat
 import com.android.bloomshows.navigation.NavGraph
 import com.android.bloomshows.ui.theme.BloomShowsTheme
 
+
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-
 
         super.onCreate(savedInstanceState)
         //setting fullscreen window

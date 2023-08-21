@@ -43,8 +43,8 @@ import androidx.compose.ui.unit.dp
 import com.android.bloomshows.presentation.on_boarding.DataOnBoarding
 import com.android.bloomshows.presentation.on_boarding.LabelGroup
 import com.android.bloomshows.presentation.on_boarding.TopContent
-import com.android.bloomshows.ui.components.ButtonWithIndicator
-import com.android.bloomshows.ui.components.WormPageIndicator
+import com.android.bloomshows.presentation.on_boarding.components.ButtonWithIndicator
+import com.android.bloomshows.ui.common_components.WormPageIndicator
 import com.android.bloomshows.ui.theme.MediumPadding
 import com.android.bloomshows.ui.theme.SmallPadding
 import kotlin.math.absoluteValue
@@ -125,14 +125,13 @@ fun CircleRevealPager(
                         Image(
                             modifier = Modifier.fillMaxWidth().padding(horizontal = SmallPadding),
                             contentScale = ContentScale.FillWidth,
-                            painter = painterResource(slides[pagerState.currentPage].illustration),
-                            contentDescription = "slide ${pagerState.currentPage} illustrations"
+                            painter = painterResource(slides[page].illustration),
+                            contentDescription = "slide ${page} illustrations"
                         )
                         LabelGroup(
-                            slides[pagerState.currentPage],
+                            slides[page],
                             Modifier
                         )
-
                     }
                 }
             }

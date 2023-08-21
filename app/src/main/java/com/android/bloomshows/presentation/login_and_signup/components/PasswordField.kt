@@ -1,6 +1,5 @@
-package com.android.bloomshows.ui.components
+package com.android.bloomshows.presentation.login_and_signup.components
 
-import TextFieldState
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,7 +27,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.android.bloomshows.R
-
+import com.android.bloomshows.presentation.login_and_signup.utils.TextFieldState
 
 @OptIn(ExperimentalMaterial3Api::class) // OutlinedTextField is experimental in m3
 @Composable
@@ -39,12 +38,15 @@ fun Password(
     imeAction: ImeAction = ImeAction.Done,
     onImeAction: () -> Unit = {}
 ) {
+
+
     val showPassword = rememberSaveable { mutableStateOf(false) }
     OutlinedTextField(
         value = passwordState.text,
         onValueChange = {
             passwordState.text = it
             passwordState.enableShowErrors()
+
         },
         modifier = modifier
             .fillMaxWidth()

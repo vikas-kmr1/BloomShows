@@ -1,4 +1,4 @@
-package com.android.bloomshows.ui.components
+package com.android.bloomshows.presentation.on_boarding.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background

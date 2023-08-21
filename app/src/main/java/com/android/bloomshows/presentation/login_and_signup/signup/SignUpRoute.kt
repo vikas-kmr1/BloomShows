@@ -11,7 +11,6 @@ fun SignUpRoute(
     ) {
     //val signInViewModel: SignInViewModel = viewModel(factory = SignInViewModelFactory())
     SignUpScreen(
-        email = email,
         onSignUpSubmitted = { name, email, password ->
             // signInViewModel.signIn(email, password, onSignInSubmitted)
         },

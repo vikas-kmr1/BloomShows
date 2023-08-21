@@ -1,4 +1,4 @@
-package com.android.bloomshows.ui.components
+package com.android.bloomshows.ui.common_components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp

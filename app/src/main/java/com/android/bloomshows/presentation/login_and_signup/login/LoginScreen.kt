@@ -1,9 +1,9 @@
 package com.android.bloomshows.presentation.login_and_signup.login
 
-import EmailState
-import EmailStateSaver
+import com.android.bloomshows.presentation.login_and_signup.utils.EmailState
+import com.android.bloomshows.presentation.login_and_signup.utils.EmailStateSaver
 import HyperlinkText
-import PasswordState
+import com.android.bloomshows.presentation.login_and_signup.utils.PasswordState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
@@ -50,10 +50,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.bloomshows.R
-import com.android.bloomshows.ui.components.BloomshowsBranding
-import com.android.bloomshows.ui.components.Email
-import com.android.bloomshows.ui.components.ErrorSnackbar
-import com.android.bloomshows.ui.components.Password
+import com.android.bloomshows.ui.common_components.BloomshowsBranding
+import com.android.bloomshows.ui.common_components.ErrorSnackbar
+import com.android.bloomshows.presentation.login_and_signup.components.LoginSignupTextField
+import com.android.bloomshows.presentation.login_and_signup.components.Password
 import com.android.bloomshows.ui.theme.BloomShowsTheme
 import com.android.bloomshows.ui.theme.ExtraSmallElevation
 import com.android.bloomshows.ui.theme.ExtraSmallPadding
@@ -62,7 +62,6 @@ import com.android.bloomshows.ui.theme.MediumTextSize
 import com.android.bloomshows.ui.theme.SemiLargeTextSize
 import com.android.bloomshows.ui.theme.SemiMediumTextSize
 import com.android.bloomshows.ui.theme.SmallPadding
-import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -260,7 +259,7 @@ private fun LoginInputFields(
         val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
             mutableStateOf(EmailState(email))
         }
-        Email(emailState, onImeAction = { focusRequester.requestFocus() })
+        LoginSignupTextField(state=emailState, onImeAction = { focusRequester.requestFocus() })
 
         //Spacer(modifier = Modifier.height(16.dp))
 

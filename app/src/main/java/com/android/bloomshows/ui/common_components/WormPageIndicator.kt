@@ -1,4 +1,4 @@
-package com.android.bloomshows.ui.components
+package com.android.bloomshows.ui.common_components
 
 import android.content.Context
 import android.os.Build

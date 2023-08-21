@@ -33,20 +33,8 @@ fun OnBoardingScreen(
     /*  // Not Using for now :
         //screen orientation check
         var orientation by remember { mutableStateOf(Configuration.ORIENTATION_PORTRAIT) }
-        val configuration = LocalConfiguration.current
+        val configuration = LocalConfiguration.current*/
 
-         LaunchedEffect(configuration) {
-            // Save any changes to the orientation value on the configuration object
-            snapshotFlow { configuration.orientation }
-                .collect { orientation = it }
-        }
-
-        val offetVertical = when (orientation) {
-            Configuration.ORIENTATION_PORTRAIT -> 70.dp
-            else -> {
-                -50.dp
-            }
-        }*/
     CircleRevealPager(slides = slides, navigate_to_login = navigate_to_login)
 }
 

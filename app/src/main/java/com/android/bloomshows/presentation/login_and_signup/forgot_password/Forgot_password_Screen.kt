@@ -1,13 +1,12 @@
 package com.android.bloomshows.presentation.login_and_signup.forgot_password
 
-import EmailState
-import EmailStateSaver
+import com.android.bloomshows.presentation.login_and_signup.utils.EmailState
+import com.android.bloomshows.presentation.login_and_signup.utils.EmailStateSaver
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,10 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -40,8 +37,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.bloomshows.R
-import com.android.bloomshows.ui.components.BloomshowsBranding
-import com.android.bloomshows.ui.components.Email
+import com.android.bloomshows.presentation.login_and_signup.components.LoginSignupTextField
+import com.android.bloomshows.ui.common_components.BloomshowsBranding
 import com.android.bloomshows.ui.theme.BloomShowsTheme
 import com.android.bloomshows.ui.theme.MediumPadding
 import com.android.bloomshows.ui.theme.MediumTextSize
@@ -128,7 +125,7 @@ private fun ForgotInputFields(
         val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
             mutableStateOf(EmailState(""))
         }
-        Email(emailState, onImeAction = { focusRequester.requestFocus() })
+        LoginSignupTextField(emailState, onImeAction = { focusRequester.requestFocus() })
 
         //TODO authentication and user -credential verification
         val onSubmit = {

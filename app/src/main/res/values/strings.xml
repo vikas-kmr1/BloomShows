@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">BloomShows</string>
-    <string name="dfs">dfs</string>
     <string name="skip">Skip</string>
     <string name="welcome_to_bloomshows">Welcome to BloomShows</string>
     <string name="login_or_signup_to_continue">Login or Signup to continue</string>
@@ -22,8 +21,11 @@
     <string name="all_fields_are_mandatory">all fields are mandatory</string>
     <string name="at_least_8_characters">At least 8 characters</string>
     <string name="at_least_1_number">At least 1 number</string>
-    <string name="both_both_upper_and_lower_case_letters">Both both upper and lower case letters</string>
+    <string name="both_both_upper_and_lower_case_letters">Both upper and lower case letters</string>
     <string name="agreeging_to_the_terms_of_service_and_privacy_policy_with_the_provider">agreeging to the Terms of service and Privacy Policy with the provider</string>
     <string name="enter_your_email_to_reset_password">Enter your email to reset password</string>
     <string name="cancel">Cancel</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="name">Name</string>
+    <string name="atleast_one_special_character"><![CDATA[Atleast 1 special character [@,$,!,%,&]]]></string>
 </resources>
