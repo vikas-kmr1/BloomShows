@@ -1,6 +1,13 @@
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
+
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -30,11 +37,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -71,10 +78,13 @@ dependencies {
     implementation("androidx.compose.foundation:foundation:1.4.0")
     //implementation("androidx.constraintlayout:constraintlayout:2.0.4")
 
+    // ViewModel utilities for Compose
+    val lifecycle_version = "2.6.1"
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
+
 
     //compose-navigation
     implementation("androidx.navigation:navigation-compose:2.5.0")
-
 
     //animation
     implementation("androidx.compose.animation:animation:1.4.0")
@@ -87,4 +97,44 @@ dependencies {
 //    //core-splash-
 //    implementation("androidx.core:core-splashscreen:1.0.1")
 
+    //timber for better logging
+    implementation("com.jakewharton.timber:timber:5.0.1")
+
+    //sandwich by (skydoves Jaewoong Eum) to standardized interfaces from the Retrofit network response
+    implementation ("com.github.skydoves:sandwich:1.3.8")
+
+    //compose Coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+    //hilt
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    // Retrofit with Converter
+    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
+
+    //http interceptors
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+
+    //room
+    val room_version = "2.5.2"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    // Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$room_version")
+    // To use Kotlin Symbol Processing (KSP)
+    ksp("androidx.room:room-compiler:$room_version")
+
+    // To use Kotlin annotation processing tool (kapt)
+    //kapt("androidx.room:room-compiler:$room_version") //using ksp instead
+
+
 }
+
+//// Allow references to generated code
+//kapt {
+//    correctErrorTypes = true
+//}
