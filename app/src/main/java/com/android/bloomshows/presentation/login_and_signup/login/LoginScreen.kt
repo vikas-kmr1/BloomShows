@@ -17,11 +17,14 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.mandatorySystemGestures
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -62,6 +65,7 @@ import com.android.bloomshows.ui.theme.MediumTextSize
 import com.android.bloomshows.ui.theme.SemiLargeTextSize
 import com.android.bloomshows.ui.theme.SemiMediumTextSize
 import com.android.bloomshows.ui.theme.SmallPadding
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -77,12 +81,12 @@ fun LoginScreen(
     val snackbarActionLabel = "dimiss"
 
     Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
-            .windowInsetsPadding(WindowInsets.systemBars)
             .padding(horizontal = MediumPadding)
             .padding(top = MediumPadding)
-            .scrollable(orientation = Orientation.Vertical, state = rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .windowInsetsPadding(WindowInsets.systemBars)
+            .verticalScroll( state = rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(SmallPadding, Alignment.Top)
     ) {
         BloomshowsBranding(
@@ -115,7 +119,7 @@ fun LoginScreen(
         TextButton(
             //TODO handle snack bar snackBar accordingly
             onClick = {
-                      navToForgot()
+                     navToForgot()
 //                scope.launch {
 //                    snackbarHostState.showSnackbar(
 //                        message = snackbarErrorText,
@@ -165,13 +169,13 @@ fun LoginScreen(
         }
 
         PolicyAndTerms()
-    }
 
+    }
     Box(modifier = Modifier.fillMaxSize()) {
         ErrorSnackbar(
             snackbarHostState = snackbarHostState,
             onDismiss = { snackbarHostState.currentSnackbarData?.dismiss() },
-            modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = Modifier.align(Alignment.BottomCenter).windowInsetsPadding(WindowInsets.navigationBars)
         )
     }
 }

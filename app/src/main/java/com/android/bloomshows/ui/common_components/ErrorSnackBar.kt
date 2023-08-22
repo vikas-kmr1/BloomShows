@@ -41,7 +41,6 @@ fun ErrorSnackbar(
                         TextButton(onClick = onDismiss) {
                             Text(
                                 text = stringResource(R.string.dismiss),
-                                color = MaterialTheme.colorScheme.inversePrimary,
                                 style = MaterialTheme.typography.labelLarge.copy(
                                     fontWeight = FontWeight.Bold,
                                     fontSize = MediumTextSize,

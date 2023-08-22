@@ -67,9 +67,6 @@ fun CircleRevealPager(
                     offsetY = it.y
                     false
                 }
-                .clip(
-                    RoundedCornerShape(25.dp)
-                )
                 .background(Color.Black),
             state = pagerState,
         ) { page ->
@@ -139,7 +136,7 @@ fun CircleRevealPager(
         Box(
             modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter)
                 .windowInsetsPadding(WindowInsets.navigationBars)
-                .padding(MediumPadding)
+                .padding(SmallPadding)
         ) {
             WormPageIndicator(
                 modifier = Modifier.align(Alignment.BottomCenter),
