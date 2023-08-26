@@ -1,7 +1,6 @@
 package com.android.bloomshows.presentation.login_and_signup.signup
 
 import HyperlinkText
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -64,11 +63,7 @@ import com.android.bloomshows.ui.theme.SemiLargeTextSize
 import com.android.bloomshows.ui.theme.SemiMediumIcon
 import com.android.bloomshows.ui.theme.SemiMediumTextSize
 import com.android.bloomshows.ui.theme.SmallPadding
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 @Composable
 fun SignUpScreen(
@@ -241,7 +236,7 @@ private fun SignUpInputFields(
             modifier = Modifier
                 .fillMaxWidth(),
             shape = MaterialTheme.shapes.small,
-            enabled = emailState.isValid && passwordState.isValid
+            enabled = emailState.isValid && passwordState.isValid && passwordConfirmState.isValid
         )
 
         {

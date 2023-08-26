@@ -56,12 +56,16 @@ fun CircleRevealPager(
     slides: List<DataOnBoarding>,
     navigate_to_login: () -> Unit = {}
 ) {
-    val pagerState = rememberPagerState(0)
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        initialPageOffsetFraction = 0f
+    ) {
+       slides.size
+    }
     var offsetY by remember { mutableStateOf(0f) }
     val pageCount = slides.size
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(
-            pageCount = slides.size,
             modifier = Modifier
                 .pointerInteropFilter {
                     offsetY = it.y

@@ -27,5 +27,6 @@
     <string name="cancel">Cancel</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="name">Name</string>
+    <string name="CLient_ID">456961051580-apta5qoqeu51tcbc2phmvt496b4s699n.apps.googleusercontent.com</string>
     <string name="atleast_one_special_character"><![CDATA[Atleast 1 special character [@,$,!,%,&]]]></string>
 </resources>

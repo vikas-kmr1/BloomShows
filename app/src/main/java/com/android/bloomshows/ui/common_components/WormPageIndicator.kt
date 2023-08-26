@@ -31,7 +31,6 @@ import com.android.bloomshows.ui.theme.BloomShowsTheme
 import kotlinx.coroutines.launch
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WormPageIndicator(
     totalPages: Int = 1,
@@ -100,7 +99,6 @@ fun WormPageIndicator(
 private const val INDICATOR_FADE_IN_ANIMATION_DELAY = 200
 private const val DURATION_MILLIS = 150
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun PreviewWormPageIndicator(){

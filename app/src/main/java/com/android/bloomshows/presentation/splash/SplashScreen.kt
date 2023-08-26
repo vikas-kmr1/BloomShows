@@ -28,7 +28,6 @@ import com.android.bloomshows.ui.common_components.BloomshowsBranding
 import com.android.bloomshows.ui.theme.BloomShowsTheme
 import com.android.bloomshows.ui.theme.MediumPadding
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SplashScreen(
     navigate_to_home: () -> Unit,
@@ -55,7 +54,6 @@ fun SplashScreen(
 }
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun SplashLogoBloomShows(
     navigate_to_home: () -> Unit,
@@ -78,7 +76,6 @@ private fun SplashLogoBloomShows(
 }
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun SplashScreenPreview() {
@@ -93,7 +90,6 @@ fun SplashScreenPreview() {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun SplashScreenPreviewDark() {

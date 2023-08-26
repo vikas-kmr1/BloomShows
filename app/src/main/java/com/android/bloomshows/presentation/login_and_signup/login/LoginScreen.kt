@@ -1,13 +1,9 @@
 package com.android.bloomshows.presentation.login_and_signup.login
 
-import com.android.bloomshows.presentation.login_and_signup.utils.EmailState
-import com.android.bloomshows.presentation.login_and_signup.utils.EmailStateSaver
 import HyperlinkText
-import com.android.bloomshows.presentation.login_and_signup.utils.PasswordState
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +13,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.mandatorySystemGestures
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -34,6 +29,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +41,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -53,10 +50,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.bloomshows.R
-import com.android.bloomshows.ui.common_components.BloomshowsBranding
-import com.android.bloomshows.ui.common_components.ErrorSnackbar
 import com.android.bloomshows.presentation.login_and_signup.components.LoginSignupTextField
 import com.android.bloomshows.presentation.login_and_signup.components.Password
+import com.android.bloomshows.presentation.login_and_signup.utils.EmailState
+import com.android.bloomshows.presentation.login_and_signup.utils.EmailStateSaver
+import com.android.bloomshows.presentation.login_and_signup.utils.PasswordState
+import com.android.bloomshows.ui.common_components.BloomshowsBranding
+import com.android.bloomshows.ui.common_components.ErrorSnackbar
 import com.android.bloomshows.ui.theme.BloomShowsTheme
 import com.android.bloomshows.ui.theme.ExtraSmallElevation
 import com.android.bloomshows.ui.theme.ExtraSmallPadding
@@ -65,15 +65,17 @@ import com.android.bloomshows.ui.theme.MediumTextSize
 import com.android.bloomshows.ui.theme.SemiLargeTextSize
 import com.android.bloomshows.ui.theme.SemiMediumTextSize
 import com.android.bloomshows.ui.theme.SmallPadding
-import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
     email: String?,
+    state: SignInState,
     onLogInSubmitted: (email: String, password: String) -> Unit,
+    onGoogleSignInClicked:() -> Unit,
+    onFaceBookSignInClicked: () -> Unit,
     navToSignup: () -> Unit = {},
     navToForgot: () -> Unit = {},
-    ) {
+) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -86,9 +88,20 @@ fun LoginScreen(
             .padding(horizontal = MediumPadding)
             .padding(top = MediumPadding)
             .windowInsetsPadding(WindowInsets.systemBars)
-            .verticalScroll( state = rememberScrollState()),
+            .verticalScroll(state = rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(SmallPadding, Alignment.Top)
     ) {
+        val context = LocalContext.current
+        LaunchedEffect(key1 = state.signInError) {
+            state.signInError?.let { error ->
+                Toast.makeText(
+                    context,
+                    error,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
         BloomshowsBranding(
             modifier = Modifier
                 .fillMaxWidth()
@@ -105,7 +118,14 @@ fun LoginScreen(
         )
 
         //Google and facebook logins
-        LoginWithGroup()
+
+
+        LoginWithGroup(
+            onGoogleSignInClicked = onGoogleSignInClicked,
+            onFaceBookSignInClicked = onFaceBookSignInClicked,
+            state = state
+        )
+
 
         Text(
             text = stringResource(R.string.or_continue_with_email),
@@ -119,7 +139,7 @@ fun LoginScreen(
         TextButton(
             //TODO handle snack bar snackBar accordingly
             onClick = {
-                     navToForgot()
+                navToForgot()
 //                scope.launch {
 //                    snackbarHostState.showSnackbar(
 //                        message = snackbarErrorText,
@@ -175,19 +195,38 @@ fun LoginScreen(
         ErrorSnackbar(
             snackbarHostState = snackbarHostState,
             onDismiss = { snackbarHostState.currentSnackbarData?.dismiss() },
-            modifier = Modifier.align(Alignment.BottomCenter).windowInsetsPadding(WindowInsets.navigationBars)
+            modifier = Modifier.align(Alignment.BottomCenter)
+                .windowInsetsPadding(WindowInsets.navigationBars)
         )
     }
 }
 
 
+
 @Composable
-private fun LoginWithGroup(modifier: Modifier = Modifier) {
+private fun LoginWithGroup(
+    modifier: Modifier = Modifier,
+    onGoogleSignInClicked:() -> Unit,
+    onFaceBookSignInClicked: () -> Unit,
+    state: SignInState
+) {
+
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(SmallPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val context = LocalContext.current
+        LaunchedEffect(key1 = state.signInError) {
+            state.signInError?.let { error ->
+                Toast.makeText(
+                    context,
+                    error,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
         //Google login
         ElevatedCard(
             modifier = Modifier.fillMaxWidth(),
@@ -196,7 +235,7 @@ private fun LoginWithGroup(modifier: Modifier = Modifier) {
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth()
-                    .clickable(onClick = {})
+                    .clickable(onClick = onGoogleSignInClicked )
                     .align(Alignment.CenterHorizontally).padding(SmallPadding),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
@@ -217,6 +256,7 @@ private fun LoginWithGroup(modifier: Modifier = Modifier) {
             }
         }
 
+
         //FaceBook login
         ElevatedCard(
             modifier = Modifier.fillMaxWidth(),
@@ -225,7 +265,7 @@ private fun LoginWithGroup(modifier: Modifier = Modifier) {
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth()
-                    .clickable(onClick = {})
+                    .clickable(onClick = onFaceBookSignInClicked)
                     .align(Alignment.CenterHorizontally).padding(SmallPadding),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
@@ -263,7 +303,7 @@ private fun LoginInputFields(
         val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
             mutableStateOf(EmailState(email))
         }
-        LoginSignupTextField(state=emailState, onImeAction = { focusRequester.requestFocus() })
+        LoginSignupTextField(state = emailState, onImeAction = { focusRequester.requestFocus() })
 
         //Spacer(modifier = Modifier.height(16.dp))
 
@@ -310,15 +350,15 @@ private fun LoginInputFields(
 @Composable
 private fun PolicyAndTerms() {
 
-        HyperlinkText(
-            fullText = stringResource(R.string.by_signing_up_you_agree_tour_terms_of_service_and_privacy_policy),
-            hyperLinks = mutableMapOf(
-                "Terms of service" to "https://google.com",
-                "Privacy Policy" to "https://google.com"
-            ),
-            linkTextColor = MaterialTheme.colorScheme.primary,
-            fontSize = SemiMediumTextSize
-        )
+    HyperlinkText(
+        fullText = stringResource(R.string.by_signing_up_you_agree_tour_terms_of_service_and_privacy_policy),
+        hyperLinks = mutableMapOf(
+            "Terms of service" to "https://google.com",
+            "Privacy Policy" to "https://google.com"
+        ),
+        linkTextColor = MaterialTheme.colorScheme.primary,
+        fontSize = SemiMediumTextSize
+    )
 
 }
 
@@ -330,9 +370,11 @@ fun PreviewLoginScreen() {
     BloomShowsTheme {
         LoginScreen(
             email = null,
+            state = SignInState(),
             onLogInSubmitted = { _, _ -> },
-            navToForgot = {  }
-        )
+            navToForgot = { },
+            onFaceBookSignInClicked =  {},
+            onGoogleSignInClicked = {})
     }
 }
 

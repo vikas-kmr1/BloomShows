@@ -9,9 +9,9 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/ic_bloomshows"
-        android:label="@string/app_name"
         android:roundIcon="@drawable/ic_bloomshows"
         android:supportsRtl="true"
+        android:label="@string/app_name"
         android:name=".BloomShowsApplication"
         android:theme="@style/Theme.BloomShows"
         tools:targetApi="31">

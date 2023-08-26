@@ -19,13 +19,14 @@ import com.android.bloomshows.presentation.home.HomeRoute
 import com.android.bloomshows.presentation.login_and_signup.forgot_password.Forgot_password_route
 import com.android.bloomshows.presentation.login_and_signup.login.LoginRoute
 import com.android.bloomshows.presentation.login_and_signup.signup.SignUpRoute
+import com.android.bloomshows.presentation.login_and_signup.signup.SignUpViewModel
 import com.android.bloomshows.presentation.on_boarding.OnBoardingScreen
 import com.android.bloomshows.presentation.splash.SplashScreen
 
 
 @Composable
 fun NavGraph(
-    navigationController: NavHostController = rememberNavController()
+    navigationController: NavHostController = rememberNavController(),
 ) {
     NavHost(
         //TODO change this with the screen you are working on
@@ -41,7 +42,7 @@ fun NavGraph(
                 },
                 navigate_to_onboarding = {
                     navigationController.popBackStack()// prevent navigation to splash again  when onBack clicked
-                    navigationController.navigate(OnboardingDestination.route)
+                    navigationController.navigate(OnboardingDestination.route){launchSingleTop = true}
                 }
             )
 
@@ -60,7 +61,9 @@ fun NavGraph(
                         navigationController.popBackStack()
                         navigationController.navigate(route = SignUpDestination.route)
                     },
-                    onLogInSubmitted = {},
+                    onLogInSubmitted = {
+                        navigationController.navigate(route = HomeDestination.route)
+                    },
                     onNavigateToForgot = {
                         navigationController.navigate(
                             ForgetCredentialsDestination.route
@@ -72,12 +75,17 @@ fun NavGraph(
 
         composable(route = SignUpDestination.route) {
             EnterAnimation {
+
+
                 SignUpRoute(
                     onNavigateToLogin = {
                         navigationController.popBackStack()
                         navigationController.navigate(route = LoginDestination.route)
                     },
-                    onSignUpSubmitted = {},
+                    onSignUpSubmitted = {
+                        navigationController.navigate(route = HomeDestination.route)
+                    }
+
                 )
             }
         }
