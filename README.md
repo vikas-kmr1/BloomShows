@@ -2,6 +2,11 @@
 
 #### Unlock Your Cinematic Journey: Seamless Booking, Endless Entertainment!
 
+<div align="center">
+    <h2>UI Gallery</h2>
+</div>
+<hr>
+
 | SpashScreen                                                             |                                                                   |
 |-------------------------------------------------------------------------|-------------------------------------------------------------------|
 | <img width ="200px" src = "BloomshowsRes/screenshots/spalshscreen.jpg"> | <img width ="200px" src = "BloomshowsRes/screenshots/splash.gif"> |
