@@ -25,14 +25,11 @@ sealed interface SignUpUIState {
     data class Error(val errorResponse: BloomShowsErrorResponse) : SignUpUIState
     data class Progress(val inProgress: Boolean) : SignUpUIState
 }
-
-
 @HiltViewModel
 class SignUpViewModel @Inject constructor(private val accountService: AccountService) :
     ViewModel() {
     var uiState: SignUpUIState by mutableStateOf(SignUpUIState.Progress(false))
         private set
-
 
     fun signUp(
         email: String ,

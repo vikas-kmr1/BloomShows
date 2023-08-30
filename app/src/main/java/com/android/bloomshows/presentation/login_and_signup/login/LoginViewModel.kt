@@ -1,128 +1,168 @@
 package com.android.bloomshows.presentation.login_and_signup.login
 
-import android.app.Activity
-import android.content.Intent
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
+import android.accounts.NetworkErrorException
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.IntentSenderRequest
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.bloomshows.network.model.BloomShowsErrorResponse
+import com.android.bloomshows.network.model.SignInResult
 import com.android.bloomshows.network.services.auth.AccountService
-import com.android.bloomshows.network.services.auth.SignInResult
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.android.bloomshows.network.services.auth.GoogleAuthUiClient
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.FirebaseTooManyRequestsException
+import com.google.firebase.auth.FirebaseAuthException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import java.io.IOException
 import javax.inject.Inject
-import kotlin.math.sign
+
 
 sealed interface LoginUIState {
     data class LoginSuccess(
-        val email: String = "",
-        val password: String = "",
+        val isSignInSuccessful: Boolean = false
     ) : LoginUIState
 
     data class Error(val errorResponse: BloomShowsErrorResponse) : LoginUIState
     data class Progress(val inProgress: Boolean) : LoginUIState
 }
 
-
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val accountService: AccountService,
 ) :
     ViewModel() {
-    var uiState: LoginUIState by mutableStateOf(LoginUIState.Progress(false))
+    var logInUiState: LoginUIState by mutableStateOf(LoginUIState.Progress(false))
         private set
 
-    private val _state = MutableStateFlow(SignInState())
-    val state = _state.asStateFlow()
 
-    fun onSignInResult(result: SignInResult) {
-        _state.update { it.copy(
-            isSignInSuccessful = result.data != null,
-            signInError = result.errorMessage
-        ) }
-    }
+    val currentUser = accountService.currentUser.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+        initialValue = null
+    ) //userdata
+    val hasuser: Boolean = accountService.hasUser
+    val userId = accountService.currentUserId
+
+
+    @Inject
+    lateinit var googleAuthUiClient: GoogleAuthUiClient
 
     fun resetState() {
-        _state.update { SignInState() }
+        logInUiState = LoginUIState.Progress(false)
     }
+
+    fun onGoogleSigninResult(result: SignInResult) {
+        logInUiState = if (result.errorMessage == null) LoginUIState.LoginSuccess(true)
+        else LoginUIState.Error(
+            BloomShowsErrorResponse(
+                message = result.errorMessage.message,
+                errorCode = ""
+            )
+        )
+    }
+
     fun logIn(
         email: String,
         password: String,
-        onLoginCompleted: () -> Unit
     ) {
         viewModelScope.launch {
-            LoginUIState.Progress(true)
-
-            uiState = try {
+            logInUiState = LoginUIState.Progress(true)
+            logInUiState = try {
                 accountService.authenticate(email, password)
-                LoginUIState.LoginSuccess(email, password).apply {
-                    onLoginCompleted()
-                }
-            } catch (e: IOException) {
-                LoginUIState.Error(BloomShowsErrorResponse(404, ""))
+                LoginUIState.LoginSuccess(true)
+            } catch (firebaseError: FirebaseAuthException) {
+                LoginUIState.Error(
+                    BloomShowsErrorResponse(
+                        message = firebaseError.localizedMessage,
+                        errorCode = firebaseError.errorCode
+                    )
+                )
+            } catch (firebaseError: FirebaseTooManyRequestsException) {
+                LoginUIState.Error(
+                    BloomShowsErrorResponse(
+                        message = firebaseError.message,
+                        errorCode = firebaseError.cause.toString()
+                    )
+                )
+            } catch (firebaseError: FirebaseNetworkException) {
+                LoginUIState.Error(
+                    BloomShowsErrorResponse(
+                        message = firebaseError.message,
+                        errorCode ="NETWORK_ERROR"
+                    )
+                )
             } catch (e: HttpException) {
-                LoginUIState.Error(BloomShowsErrorResponse(404, ""))
+                LoginUIState.Error(BloomShowsErrorResponse("UNKOWN", "Network Error"))
+            } catch (e: ApiException) {
+                LoginUIState.Error(BloomShowsErrorResponse(404, "Something wentwrong. Try later!"))
             }
         }
     }
 
+    fun logOut(navigate_to_login: () -> Unit) {
+        viewModelScope.launch {
+            accountService.signOut()
+            googleAuthUiClient.signOut().also {
+                resetState()
+                navigate_to_login()
+            }
+        }
+    }
 
-
-//    fun launchGoogleSignInIntent(result:ActivityResult){
-//        Log.v("button-data",result.data.toString())
-//
-//                    viewModelScope.launch {
-//                        val signInResult = accountService.signInWithIntent(
-//                            intent = result.data ?: return@launch
-//                        )
-//                        onSignInResult(signInResult)
-//                    }
-//
-//
-//    }
-
-//    private fun signInWithGoogle() {
-//        viewModelScope.launch {
-//        if(state.value.isSignInSuccessful)
-//            accountService.signInWithGoogle()
-//        }
-//    }
-
+    fun logInWithGoogle(launcher: ManagedActivityResultLauncher<IntentSenderRequest, ActivityResult>) {
+        viewModelScope.launch {
+            logInUiState = LoginUIState.Progress(true)
+            logInUiState = try {
+                val signInIntentSender = googleAuthUiClient.signIn()
+                launcher.launch(
+                    IntentSenderRequest.Builder(
+                        signInIntentSender ?: return@launch
+                    ).build()
+                )
+                LoginUIState.Progress(true)
+            } catch (firebaseError: FirebaseAuthException) {
+                LoginUIState.Error(
+                    BloomShowsErrorResponse(
+                        message = firebaseError.localizedMessage,
+                        errorCode = firebaseError.errorCode
+                    )
+                )
+            } catch (firebaseError: FirebaseTooManyRequestsException) {
+                LoginUIState.Error(
+                    BloomShowsErrorResponse(
+                        message = firebaseError.message,
+                        errorCode = firebaseError.cause.toString()
+                    )
+                )
+            } catch (firebaseError: FirebaseNetworkException) {
+                LoginUIState.Error(
+                    BloomShowsErrorResponse(
+                        message = firebaseError.message,
+                        errorCode = "NETWORK_ERROR"
+                    )
+                )
+            } catch (e: HttpException) {
+                LoginUIState.Error(BloomShowsErrorResponse("UNKNOWN", "Network Error"))
+            } catch (e: ApiException) {
+                LoginUIState.Error(BloomShowsErrorResponse(404, "Something wentwrong. Try later!"))
+            }
+        }
+    }
 
     companion object {
-        const val RC_SIGN_IN = 9001 // Request code for Google Sign-In
+        private const val TIMEOUT_MILLIS = 5_000L
     }
 }
 
-data class SignInState(
-    val isSignInSuccessful: Boolean = false,
-    val signInError: String? = null
-)
-class SignInViewModel: ViewModel() {
 
-    private val _state = MutableStateFlow(SignInState())
-    val state = _state.asStateFlow()
-
-    fun onSignInResult(result: SignInResult) {
-        _state.update { it.copy(
-            isSignInSuccessful = result.data != null,
-            signInError = result.errorMessage
-        ) }
-    }
-
-    fun resetState() {
-        _state.update { SignInState() }
-    }
-}

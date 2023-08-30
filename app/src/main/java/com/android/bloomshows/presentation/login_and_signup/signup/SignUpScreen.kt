@@ -137,14 +137,14 @@ fun SignUpScreen(
                 )
             )
         }
-
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
         ErrorSnackbar(
             snackbarHostState = snackbarHostState,
             onDismiss = { snackbarHostState.currentSnackbarData?.dismiss() },
-            modifier = Modifier.align(Alignment.BottomCenter).windowInsetsPadding(WindowInsets.navigationBars)
+            modifier = Modifier.align(Alignment.BottomCenter).windowInsetsPadding(WindowInsets.navigationBars),
+            color = MaterialTheme.colorScheme.inverseSurface
         )
     }
 }
@@ -194,14 +194,13 @@ private fun SignUpInputFields(
             label = stringResource(R.string.password),
             passwordState = passwordState,
             modifier = Modifier.focusRequester(focusRequester),
-            onImeAction = { onSubmit() }
+
         )
         //Confirm password
         Password(
             label = stringResource(R.string.confirm_password),
             passwordState = passwordConfirmState,
             modifier = Modifier.focusRequester(focusRequester),
-            onImeAction = { onSubmit() }
         )
 
         //validating password pattern

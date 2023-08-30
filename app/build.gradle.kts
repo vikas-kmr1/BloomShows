@@ -130,9 +130,11 @@ dependencies {
     // To use Kotlin Symbol Processing (KSP)
     ksp("androidx.room:room-compiler:$room_version")
 
-    // To use Kotlin annotation processing tool (kapt)
-    //kapt("androidx.room:room-compiler:$room_version") //using ksp instead
+    /* To use Kotlin annotation processing tool (kapt)
+     kapt("androidx.room:room-compiler:$room_version") using ksp instead*/
 
+    //datastore for preferences
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     //FIREBASE
     // Import the BoM for the Firebase platform
@@ -146,6 +148,8 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.6.0")
     implementation("com.google.firebase:firebase-perf-ktx")
     implementation("com.google.firebase:firebase-config-ktx")
+
+
 
 }
 

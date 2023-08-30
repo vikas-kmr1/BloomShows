@@ -1,5 +1,6 @@
 package com.android.bloomshows.network.services.auth
 
+import com.android.bloomshows.network.model.User
 import kotlinx.coroutines.flow.Flow
 
 interface AccountService {

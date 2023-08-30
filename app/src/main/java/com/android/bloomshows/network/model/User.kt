@@ -1,6 +1,4 @@
-package com.android.bloomshows.network.services.auth
-
-import android.service.autofill.UserData
+package com.android.bloomshows.network.model
 
 data class User(
     val userId: String = "",
@@ -17,5 +15,5 @@ data class User(
 
 data class SignInResult(
     val data: User?,
-    val errorMessage: String?
+    val errorMessage: Exception?
 )
