@@ -21,17 +21,14 @@ class GoogleAuthUiClient(
     private val auth: FirebaseAuth
 ) {
     suspend fun signIn(): IntentSender? {
-        val result = try {
+        val result =
             oneTapClient.beginSignIn(
                 buildSignInRequest()
             ).await()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            if (e is CancellationException) throw e
-            null
-        }
+
         return result?.pendingIntent?.intentSender
     }
+
     suspend fun signInWithIntent(intent: Intent): SignInResult {
         val credential = oneTapClient.getSignInCredentialFromIntent(intent)
         val googleIdToken = credential.googleIdToken

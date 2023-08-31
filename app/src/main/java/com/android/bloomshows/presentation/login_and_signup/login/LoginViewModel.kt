@@ -1,6 +1,5 @@
 package com.android.bloomshows.presentation.login_and_signup.login
 
-import android.accounts.NetworkErrorException
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
@@ -18,10 +17,8 @@ import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuthException
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -63,12 +60,9 @@ class LoginViewModel @Inject constructor(
     }
 
     fun onGoogleSigninResult(result: SignInResult) {
-        logInUiState = if (result.errorMessage == null) LoginUIState.LoginSuccess(true)
-        else LoginUIState.Error(
-            BloomShowsErrorResponse(
-                message = result.errorMessage.message,
-                errorCode = ""
-            )
+        logInUiState = if (result.data!=null) LoginUIState.LoginSuccess(true)
+        else LoginUIState.Progress(
+          false
         )
     }
 
@@ -125,13 +119,14 @@ class LoginViewModel @Inject constructor(
             logInUiState = LoginUIState.Progress(true)
             logInUiState = try {
                 val signInIntentSender = googleAuthUiClient.signIn()
-                launcher.launch(
+                val launcher = launcher.launch(
                     IntentSenderRequest.Builder(
                         signInIntentSender ?: return@launch
                     ).build()
                 )
                 LoginUIState.Progress(true)
-            } catch (firebaseError: FirebaseAuthException) {
+            }
+            catch (firebaseError: FirebaseAuthException) {
                 LoginUIState.Error(
                     BloomShowsErrorResponse(
                         message = firebaseError.localizedMessage,

@@ -13,7 +13,7 @@ data class DataOnBoarding(
     val illustration: Int,
     val backgroundColor:Color,
 )
-//TODO replace illustration according to slide
+// replace illustration according to slide
 val onBoardingSlides = listOf(
 
     DataOnBoarding(

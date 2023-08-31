@@ -122,7 +122,6 @@ fun LoginScreen(
             navToHome = navToHome
         )
 
-
         Text(
             text = stringResource(R.string.or_continue_with_email),
             color = Color.Gray,
@@ -133,7 +132,7 @@ fun LoginScreen(
         LoginInputFields(email = email, onLogInSubmitted = onLogInSubmitted)
 
         TextButton(
-            //TODO handle snack bar snackBar accordingly
+            //handle snack bar snackBar accordingly
             onClick = {
                 navToForgot()
 
@@ -158,7 +157,7 @@ fun LoginScreen(
         )
 
         //Spacer(modifier = Modifier.height(16.dp))
-        //TODO nav to signup
+        // nav to signup
         OutlinedButton(
             onClick = { navToSignup() },
             modifier = Modifier
@@ -288,7 +287,7 @@ private fun LoginInputFields(
 
         val passwordState = remember { PasswordState() }
 
-        //TODO authentication and user -credential verification
+        //user -credential verification
         val onSubmit = {
             if (emailState.isValid && passwordState.isValid) {
                 onLogInSubmitted(emailState.text, passwordState.text)

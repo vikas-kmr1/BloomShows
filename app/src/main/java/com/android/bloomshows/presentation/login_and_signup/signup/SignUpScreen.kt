@@ -63,6 +63,7 @@ import com.android.bloomshows.ui.theme.SemiLargeTextSize
 import com.android.bloomshows.ui.theme.SemiMediumIcon
 import com.android.bloomshows.ui.theme.SemiMediumTextSize
 import com.android.bloomshows.ui.theme.SmallPadding
+import com.android.bloomshows.ui.theme.onSuccessGreen
 import kotlinx.coroutines.launch
 
 @Composable
@@ -117,7 +118,7 @@ fun SignUpScreen(
 
 
         //Spacer(modifier = Modifier.height(16.dp))
-        //TODO nav to signup
+        // nav to Login
         OutlinedButton(
             onClick = { navToLogin() },
             modifier = Modifier
@@ -161,7 +162,7 @@ private fun SignUpInputFields(
         verticalArrangement = Arrangement.Center
     ) {
 
-        //TODO handle name ,email,password states
+        // handling name ,email,password states
         val focusRequester = remember { FocusRequester() }
         val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
             mutableStateOf(EmailState())
@@ -271,7 +272,7 @@ private fun ValidatePattern(
     ) {
         Icon(
             imageVector = icon,
-            tint = if (validCondtions[index]) Color.Green else Color.Gray,
+            tint = if (validCondtions[index]) onSuccessGreen else Color.Gray,
             modifier = Modifier.size(SemiMediumIcon),
             contentDescription = label + "icon"
         )

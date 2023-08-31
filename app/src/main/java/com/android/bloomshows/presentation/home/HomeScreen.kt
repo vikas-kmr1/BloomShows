@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -24,6 +25,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.android.bloomshows.R
 import com.android.bloomshows.presentation.login_and_signup.login.LoginViewModel
 import com.android.bloomshows.ui.theme.BloomShowsTheme
+import com.android.bloomshows.utils.animations.ShowLootieAnimation
 
 @Composable
 fun HomeScreen(
@@ -31,20 +33,16 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val firstTime by homeViewModel.isFirstTime.collectAsStateWithLifecycle()
-    Box(modifier = Modifier.fillMaxSize(),contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         if (firstTime) {
-            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.animation_sparkling))
-            val logoAnimationState =
-                animateLottieCompositionAsState(composition = composition, speed = 1f)
-            LottieAnimation(
-                modifier = Modifier.scale(2.5f).zIndex(100f).background(Color.Transparent),
-                composition = composition,
-                progress = { logoAnimationState.progress }
+            ShowLootieAnimation(
+                modifier = Modifier.fillMaxSize().scale(2.0f).zIndex(100f).background(Color.Transparent),
+                animationJsonResId = R.raw.animation_sparkling,
+                onComplete = {
+                    // call only when user launched for the very first time
+                    homeViewModel.saveUserFirstTime()
+                },
             )
-            if (logoAnimationState.isAtEnd && logoAnimationState.isPlaying) {
-                //TODO call only when user laucnhed for the very first time
-                homeViewModel.saveUserFirstTime()
-            }
         }
         Button(onClick = onLogOut) {
             Text(text = "LogOut")

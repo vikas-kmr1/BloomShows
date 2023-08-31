@@ -11,7 +11,7 @@ internal val lightBtnBg = Color(0xFFFDFDFD)
 internal val onBoardYellow = Color(0xFFFFB951)
 internal val onBoardCyan = Color(0xFF70CCD0)
 internal val onBoardPink = Color(0xFFF5B4C7)
-
+internal val onSuccessGreen = Color(0xFF4fc153)
 
 
 val md_theme_light_primary = BlueDeficient //Color(0xFF82550)

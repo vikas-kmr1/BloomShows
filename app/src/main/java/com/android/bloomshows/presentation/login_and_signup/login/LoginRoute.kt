@@ -9,6 +9,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.android.bloomshows.network.model.SignInResult
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 @Composable
@@ -24,10 +26,10 @@ fun LoginRoute(
     val scope = rememberCoroutineScope()
     val loginState = logInViewModel.logInUiState
 
+    //Activity launcer for Google SignIn
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult(),
         onResult = { result ->
-
             if (result.resultCode == Activity.RESULT_OK) {
                 scope.launch {
                     if (result.resultCode == Activity.RESULT_OK) {
@@ -39,22 +41,27 @@ fun LoginRoute(
                         }
                     }
                 }
+            } else {
+                logInViewModel.onGoogleSigninResult(SignInResult(
+                    data = null,
+                    errorMessage = CancellationException())
+                )
             }
         }
     )
-
 
     LoginScreen(
         email = "",
         onLogInSubmitted = { email, password ->
             logInViewModel.logIn(
                 email = email,
-                password = password)
+                password = password
+            )
         },
         navToSignup = navigateToSignUp,
         navToForgot = navigateToForgot,
         navToHome = {
-            scope.launch{
+            scope.launch {
                 navigateToHome()
                 logInViewModel.resetState()
             }

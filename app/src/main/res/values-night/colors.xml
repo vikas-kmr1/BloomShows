@@ -8,5 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="lightGray">@android:color/tab_indicator_text</color>
-    <color name="background">#FFFBFF</color>
+    <color name="background">#1F1B16</color>
 </resources>
