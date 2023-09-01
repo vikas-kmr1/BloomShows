@@ -30,6 +30,7 @@ fun OnBoardingScreen(
     slides: List<DataOnBoarding> = onBoardingSlides, navigate_to_login: () -> Unit = {}
 ) {
     //TODO add  text trasition and aninmation
+    
     /*  // Not Using for now :
         //screen orientation check
         var orientation by remember { mutableStateOf(Configuration.ORIENTATION_PORTRAIT) }

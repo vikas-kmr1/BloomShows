@@ -94,7 +94,7 @@ fun Forgot_password_Screen(
             AuthErrorSnackBar(
                 scope = scope,
                 snackbarHostState = snackbarHostState,
-                message = "${forgotUiState.errorResponse.errorCode}: ${forgotUiState.errorResponse.message}"
+                message = forgotUiState.errorResponse.message.toString()
             )
             resetUiState()
         }
@@ -185,7 +185,7 @@ private fun ForgotInputFields(
         }
         LoginSignupTextField(emailState, onImeAction = { focusRequester.requestFocus() })
 
-        //TODO authentication and user -credential verification
+        //user -credential verification
         val onSubmit = {
             if (emailState.isValid) {
                 onSubmitted(emailState.text)

@@ -1,5 +1,6 @@
 package com.android.bloomshows.presentation.login_and_signup.login
 
+import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
@@ -12,12 +13,10 @@ import com.android.bloomshows.network.model.BloomShowsErrorResponse
 import com.android.bloomshows.network.model.SignInResult
 import com.android.bloomshows.network.services.auth.AccountService
 import com.android.bloomshows.network.services.auth.GoogleAuthUiClient
+import com.android.bloomshows.presentation.login_and_signup.utils.EmailVerfiedException
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.FirebaseNetworkException
-import com.google.firebase.FirebaseTooManyRequestsException
-import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.FirebaseException
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -60,9 +59,9 @@ class LoginViewModel @Inject constructor(
     }
 
     fun onGoogleSigninResult(result: SignInResult) {
-        logInUiState = if (result.data!=null) LoginUIState.LoginSuccess(true)
+        logInUiState = if (result.data != null) LoginUIState.LoginSuccess(true)
         else LoginUIState.Progress(
-          false
+            false
         )
     }
 
@@ -74,45 +73,35 @@ class LoginViewModel @Inject constructor(
             logInUiState = LoginUIState.Progress(true)
             logInUiState = try {
                 accountService.authenticate(email, password)
-                LoginUIState.LoginSuccess(true)
-            } catch (firebaseError: FirebaseAuthException) {
+                LoginUIState.LoginSuccess(true) }
+             catch (firebaseError: FirebaseException) {
                 LoginUIState.Error(
                     BloomShowsErrorResponse(
                         message = firebaseError.localizedMessage,
-                        errorCode = firebaseError.errorCode
-                    )
-                )
-            } catch (firebaseError: FirebaseTooManyRequestsException) {
-                LoginUIState.Error(
-                    BloomShowsErrorResponse(
-                        message = firebaseError.message,
-                        errorCode = firebaseError.cause.toString()
-                    )
-                )
-            } catch (firebaseError: FirebaseNetworkException) {
-                LoginUIState.Error(
-                    BloomShowsErrorResponse(
-                        message = firebaseError.message,
-                        errorCode ="NETWORK_ERROR"
+                        errorCode = firebaseError.cause?.message.toString()
                     )
                 )
             } catch (e: HttpException) {
                 LoginUIState.Error(BloomShowsErrorResponse("UNKOWN", "Network Error"))
             } catch (e: ApiException) {
-                LoginUIState.Error(BloomShowsErrorResponse(404, "Something wentwrong. Try later!"))
+                LoginUIState.Error(
+                    BloomShowsErrorResponse(
+                        "404",
+                        "Something went wrong. Try later!"
+                    )
+                )
+            } catch (e: Exception) {
+                LoginUIState.Error(
+                    BloomShowsErrorResponse(
+                        "System Error",
+                        "Something wentwrong. Try again!"
+                    )
+                )
             }
         }
     }
 
-    fun logOut(navigate_to_login: () -> Unit) {
-        viewModelScope.launch {
-            accountService.signOut()
-            googleAuthUiClient.signOut().also {
-                resetState()
-                navigate_to_login()
-            }
-        }
-    }
+
 
     fun logInWithGoogle(launcher: ManagedActivityResultLauncher<IntentSenderRequest, ActivityResult>) {
         viewModelScope.launch {
@@ -125,32 +114,39 @@ class LoginViewModel @Inject constructor(
                     ).build()
                 )
                 LoginUIState.Progress(true)
-            }
-            catch (firebaseError: FirebaseAuthException) {
+            } catch (firebaseError: FirebaseException) {
                 LoginUIState.Error(
                     BloomShowsErrorResponse(
                         message = firebaseError.localizedMessage,
-                        errorCode = firebaseError.errorCode
-                    )
-                )
-            } catch (firebaseError: FirebaseTooManyRequestsException) {
-                LoginUIState.Error(
-                    BloomShowsErrorResponse(
-                        message = firebaseError.message,
-                        errorCode = firebaseError.cause.toString()
-                    )
-                )
-            } catch (firebaseError: FirebaseNetworkException) {
-                LoginUIState.Error(
-                    BloomShowsErrorResponse(
-                        message = firebaseError.message,
-                        errorCode = "NETWORK_ERROR"
+                        errorCode = firebaseError.cause?.message + ":"
                     )
                 )
             } catch (e: HttpException) {
-                LoginUIState.Error(BloomShowsErrorResponse("UNKNOWN", "Network Error"))
+                LoginUIState.Error(BloomShowsErrorResponse("UNKOWN", "Network Error"))
             } catch (e: ApiException) {
-                LoginUIState.Error(BloomShowsErrorResponse(404, "Something wentwrong. Try later!"))
+                LoginUIState.Error(
+                    BloomShowsErrorResponse(
+                        "404",
+                        "Something wentwrong. Try later!"
+                    )
+                )
+            } catch (e: Exception) {
+                LoginUIState.Error(
+                    BloomShowsErrorResponse(
+                        "System Error",
+                        "Something went wrong. Try again!"
+                    )
+                )
+            }
+        }
+    }
+
+    fun logOut(navigate_to_login: () -> Unit) {
+        viewModelScope.launch {
+            accountService.signOut()
+            googleAuthUiClient.signOut().also {
+                resetState()
+                navigate_to_login()
             }
         }
     }

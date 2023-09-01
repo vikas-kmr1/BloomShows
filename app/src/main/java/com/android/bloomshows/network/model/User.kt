@@ -4,14 +4,10 @@ data class User(
     val userId: String = "",
     val isAnonymous: Boolean = true,
     val username:String?="",
-    val profilePic:String?=""
+    val profilePic:String?="",
+    val email:String?="",
+    val emailVerfied:Boolean = false
 )
-//data class User(
-//    val userId: String = "",
-//    val isAnonymous: Boolean = true,
-//    val username:String? = "",
-//    val profilePic:String? = ""
-//)
 
 data class SignInResult(
     val data: User?,

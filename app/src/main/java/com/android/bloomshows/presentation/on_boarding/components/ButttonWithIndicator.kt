@@ -18,6 +18,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -100,7 +101,7 @@ fun ButtonWithIndicator(
                 .padding(6.dp)
                 .clip(RoundedCornerShape(MediumPadding)),
             colors = IconButtonDefaults.iconButtonColors(containerColor = color),
-            interactionSource = MutableInteractionSource()
+            interactionSource = remember {MutableInteractionSource()}
         ) {
             Icon(
                 imageVector = Icons.Filled.ArrowForwardIos,

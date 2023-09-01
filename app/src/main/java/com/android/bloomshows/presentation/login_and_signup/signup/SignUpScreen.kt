@@ -1,6 +1,7 @@
 package com.android.bloomshows.presentation.login_and_signup.signup
 
 import HyperlinkText
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,8 +46,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.android.bloomshows.R
+import com.android.bloomshows.presentation.login_and_signup.components.AuthErrorSnackBar
 import com.android.bloomshows.presentation.login_and_signup.components.LoginSignupTextField
+import com.android.bloomshows.presentation.login_and_signup.components.OnLoadingProgressBar
 import com.android.bloomshows.presentation.login_and_signup.components.Password
 import com.android.bloomshows.presentation.login_and_signup.utils.ConfirmPasswordState
 import com.android.bloomshows.presentation.login_and_signup.utils.EmailState
@@ -56,6 +60,7 @@ import com.android.bloomshows.presentation.login_and_signup.utils.NameStateSaver
 import com.android.bloomshows.presentation.login_and_signup.utils.PasswordState
 import com.android.bloomshows.ui.common_components.BloomshowsBranding
 import com.android.bloomshows.ui.common_components.ErrorSnackbar
+import com.android.bloomshows.ui.common_components.NotifyAlertDialog
 import com.android.bloomshows.ui.theme.BloomShowsTheme
 import com.android.bloomshows.ui.theme.MediumPadding
 import com.android.bloomshows.ui.theme.MediumTextSize
@@ -64,20 +69,42 @@ import com.android.bloomshows.ui.theme.SemiMediumIcon
 import com.android.bloomshows.ui.theme.SemiMediumTextSize
 import com.android.bloomshows.ui.theme.SmallPadding
 import com.android.bloomshows.ui.theme.onSuccessGreen
+import com.android.bloomshows.utils.animations.ShowLootieAnimation
 import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpScreen(
-
     onSignUpSubmitted: (name: String, email: String, password: String) -> Unit,
     navToLogin: () -> Unit = {},
-
-    ) {
+    signUpUIState: SignUpUIState) {
+    
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    val snackbarErrorText = "message"
-    val snackbarActionLabel = "dimiss"
+    when (signUpUIState) {
+        is SignUpUIState.Progress -> if (signUpUIState.inProgress) OnLoadingProgressBar()
+        is SignUpUIState.SignUpSuccess -> if(signUpUIState.isSignInSuccessful) NotifyAlertDialog(
+            showDialog = true,
+            title = stringResource(R.string.email_verification_link_sent),
+            text = stringResource(R.string.please_verify_your_email_to_continue),
+            onConfirmClicked = navToLogin,
+            icon = {
+                ShowLootieAnimation(
+                    modifier = Modifier.zIndex(100f).background(Color.Transparent),
+                    animationJsonResId = R.raw.success_animation,
+                    speed = 1.8f,
+                )
+            },
+            confirmBtnTxt = stringResource(R.string.login_now)
+        )
+        is SignUpUIState.Error -> {
+            AuthErrorSnackBar(
+                scope = scope,
+                snackbarHostState = snackbarHostState,
+                message = signUpUIState.errorResponse.message.toString()
+            )
+        }
+    }
     Column(
         modifier = Modifier.fillMaxSize()
             .windowInsetsPadding(WindowInsets.systemBars)
@@ -109,7 +136,7 @@ fun SignUpScreen(
                 scope.launch {
                     snackbarHostState.showSnackbar(
                         message = message,
-                        actionLabel = snackbarActionLabel,
+                        actionLabel = "Form-Error",
                         duration = SnackbarDuration.Short
                     )
 
@@ -154,7 +181,7 @@ fun SignUpScreen(
 @Composable
 private fun SignUpInputFields(
     onSignUpSubmitted: (name: String, email: String, password: String) -> Unit,
-    showSnackBar: (String) -> Unit
+    showSnackBar: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -333,6 +360,8 @@ fun PreviewSignUpScreen() {
     BloomShowsTheme {
         SignUpScreen(
             onSignUpSubmitted = { _, _, _ -> },
+            signUpUIState =
+            SignUpUIState.SignUpSuccess(true)
         )
     }
 }

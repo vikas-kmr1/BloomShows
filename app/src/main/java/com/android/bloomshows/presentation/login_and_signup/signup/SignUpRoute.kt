@@ -6,15 +6,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun SignUpRoute(
     email: String? = null,
-    onSignUpSubmitted: () -> Unit,
-    onNavigateToLogin:()->Unit,
+    navigateToLogin:()->Unit,
     signUpViewModel: SignUpViewModel = hiltViewModel()
     ) {
-
+    val signUpUiState = signUpViewModel.signUpUiState
     SignUpScreen(
         onSignUpSubmitted = { name, email, password ->
-             signUpViewModel.signUp(email = email, password = password, username =name,  onSignUpCompleted =  onSignUpSubmitted)
+             signUpViewModel.signUp(email = email, password = password, username = name)
         },
-        navToLogin = onNavigateToLogin
+        navToLogin = navigateToLogin,
+        signUpUIState = signUpUiState
     )
 }

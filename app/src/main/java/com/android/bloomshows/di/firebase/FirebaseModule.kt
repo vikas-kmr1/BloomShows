@@ -3,12 +3,11 @@ package com.android.bloomshows.di.firebase
 
 import android.content.Context
 import com.android.bloomshows.R
+import com.android.bloomshows.network.services.auth.GoogleAuthUiClient
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseAuth
-import com.android.bloomshows.network.services.auth.GoogleAuthUiClient
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.Module
@@ -47,7 +46,7 @@ object FirebaseModule {
         buildSignInRequest: BeginSignInRequest,
         auth:FirebaseAuth
     ):GoogleAuthUiClient{
-        return GoogleAuthUiClient(appContext, oneTapClient, buildSignInRequest,auth)
+        return GoogleAuthUiClient(oneTapClient, buildSignInRequest, auth)
     }
 
     @Provides

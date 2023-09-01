@@ -8,8 +8,7 @@ import com.skydoves.sandwich.message
 
 
 object ErrorResponseMapper : ApiErrorModelMapper<BloomShowsErrorResponse> {
-
     override fun map(apiErrorResponse: ApiResponse.Failure.Error<*>): BloomShowsErrorResponse {
-        return BloomShowsErrorResponse(apiErrorResponse.statusCode.code, apiErrorResponse.message())
+        return BloomShowsErrorResponse(apiErrorResponse.statusCode.code.toString(), apiErrorResponse.message())
     }
 }

@@ -8,9 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.android.bloomshows.network.model.BloomShowsErrorResponse
 import com.android.bloomshows.network.services.auth.AccountService
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.FirebaseNetworkException
-import com.google.firebase.FirebaseTooManyRequestsException
-import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.FirebaseException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -36,29 +34,24 @@ class ForgotViewModel @Inject constructor(
             forgotUiState = try {
                 accountService.sendRecoveryEmail(email = email)
                 ForgotUIState.Success
-            } catch (firebaseError: FirebaseAuthException) {
-                ForgotUIState.Error(
+            } catch (firebaseError: FirebaseException) {
+                ForgotUIState .Error(
                     BloomShowsErrorResponse(
                         message = firebaseError.localizedMessage,
-                        errorCode = firebaseError.errorCode
+                        errorCode = firebaseError.cause?.message + ":"
                     )
                 )
-            } catch (firebaseError: FirebaseTooManyRequestsException) {
-                ForgotUIState.Error(
-                    BloomShowsErrorResponse(
-                        message = firebaseError.message,
-                        errorCode = firebaseError.cause.toString()
-                    )
-                )
-            } catch (firebaseError: FirebaseNetworkException) {
-                ForgotUIState.Error(
-                    BloomShowsErrorResponse(
-                        message = firebaseError.message,
-                        errorCode = "NETWORK_ERROR"
-                    )
-                )
+            } catch (e: HttpException) {
+                ForgotUIState .Error(BloomShowsErrorResponse("UNKOWN", "Network Error"))
             } catch (e: ApiException) {
-                ForgotUIState.Error(BloomShowsErrorResponse(404, "Something wentwrong. Try later!"))
+                ForgotUIState .Error(BloomShowsErrorResponse("404", "Something wentwrong. Try later!"))
+            } catch (e: Exception) {
+                ForgotUIState .Error(
+                    BloomShowsErrorResponse(
+                        "System Error",
+                        "Something went wrong. Try again!"
+                    )
+                )
             }
         }
     }

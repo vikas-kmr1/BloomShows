@@ -1,6 +1,7 @@
 package com.android.bloomshows.presentation.login_and_signup.login
 
 import HyperlinkText
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,17 +27,21 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCompositionContext
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -62,6 +67,7 @@ import com.android.bloomshows.ui.theme.MediumTextSize
 import com.android.bloomshows.ui.theme.SemiLargeTextSize
 import com.android.bloomshows.ui.theme.SemiMediumTextSize
 import com.android.bloomshows.ui.theme.SmallPadding
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -80,12 +86,12 @@ fun LoginScreen(
 
     when (loginUIState) {
         is LoginUIState.Progress -> if (loginUIState.inProgress) OnLoadingProgressBar()
-        is LoginUIState.LoginSuccess -> if(loginUIState.isSignInSuccessful)navToHome()
+        is LoginUIState.LoginSuccess -> if (loginUIState.isSignInSuccessful) navToHome()
         is LoginUIState.Error -> {
             AuthErrorSnackBar(
                 scope = scope,
                 snackbarHostState = snackbarHostState,
-                message = "${loginUIState.errorResponse.errorCode}: ${loginUIState.errorResponse.message}"
+                message = loginUIState.errorResponse.message.toString()
             )
             resetUiState()
         }
@@ -118,8 +124,7 @@ fun LoginScreen(
         //Google and facebook logins
         LoginWithGroup(
             onGoogleSignInClicked = onGoogleSignInClicked,
-            onFaceBookSignInClicked = onFaceBookSignInClicked,
-            navToHome = navToHome
+            onFaceBookSignInClicked = onFaceBookSignInClicked
         )
 
         Text(
@@ -194,7 +199,6 @@ private fun LoginWithGroup(
     modifier: Modifier = Modifier,
     onGoogleSignInClicked: () -> Unit,
     onFaceBookSignInClicked: () -> Unit,
-    navToHome: () -> Unit
 ) {
 
     Column(
@@ -241,12 +245,11 @@ private fun LoginWithGroup(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth()
-                    .clickable(onClick = onFaceBookSignInClicked)
+                    .clickable(onClick = { onFaceBookSignInClicked() })
                     .align(Alignment.CenterHorizontally).padding(SmallPadding),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Image(
                     modifier = Modifier.padding(end = ExtraSmallPadding),
                     painter = painterResource(R.drawable.logo_facebook),

@@ -31,6 +31,8 @@
     <string name="atleast_one_special_character"><![CDATA[Atleast 1 special character [@,$,!,%,&]]]></string>
     <string name="confirm">Confirm</string>
     <string name="please_check_your_mail_inbox_or_spam_folder">Please! Check your mail inbox or spams.</string>
-    <string name="recovery_link_send">Password recovery link send!</string>
+    <string name="recovery_link_send">Password reset link sent!</string>
     <string name="login_now">login now</string>
+    <string name="email_verification_link_sent">"Email verification link sent! "</string>
+    <string name="please_verify_your_email_to_continue">Please! verify your email to continue.</string>
 </resources>

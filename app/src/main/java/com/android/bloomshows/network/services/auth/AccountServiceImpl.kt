@@ -1,19 +1,15 @@
 package com.android.bloomshows.network.services.auth
 
-import com.android.bloomshows.network.model.SignInResult
+import android.net.Uri
 import com.android.bloomshows.network.model.User
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.CommonStatusCodes
-import com.google.firebase.auth.EmailAuthProvider
+import com.android.bloomshows.presentation.login_and_signup.utils.EmailVerfiedException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.ktx.actionCodeSettings
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
-import timber.log.Timber
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
 
 class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) :
     AccountService {
@@ -22,6 +18,9 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) :
 
     override val hasUser: Boolean
         get() = auth.currentUser != null
+    override val emailVerfied: Boolean
+        get() = auth.currentUser?.isEmailVerified ?:false
+
 
     override val currentUser: Flow<User> = callbackFlow {
         FirebaseAuth.AuthStateListener { auth ->
@@ -29,7 +28,9 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) :
                 User(
                     userId = uid,
                     username = displayName,
-                    profilePic = photoUrl?.toString()
+                    profilePic = photoUrl?.toString(),
+                    emailVerfied = isEmailVerified,
+                    email = email
                 )
             }
         }
@@ -38,6 +39,11 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) :
     //login
     override suspend fun authenticate(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password).await()
+        if(!emailVerfied){
+            throw EmailVerfiedException(
+                "Email is not verified: Please verify your email to continue",
+                Throwable(cause = Throwable(message = "UNVERIFIED-EMAIL")))
+        }
     }
 
     override suspend fun sendRecoveryEmail(email: String) {
@@ -48,41 +54,21 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) :
         auth.signInAnonymously().await()
     }
 
-    override suspend fun linkAccount(email: String, password: String) {
-        val credential = EmailAuthProvider.getCredential(email, password)
-        Firebase.auth.currentUser!!.linkWithCredential(credential)
-            .addOnCompleteListener { }
+    override suspend fun sendEmailVerification(email: String) {
+        auth.currentUser?.sendEmailVerification()?.await()
     }
 
     //signUp
-    override suspend fun createAccount(email: String, password: String) {
-        try {
-            val user = auth.createUserWithEmailAndPassword(email, password).await().user
-            SignInResult(
-                data = user?.run {
-                    User(
-                        userId = uid,
-                        username = displayName,
-                        profilePic = photoUrl?.toString()
-                    )
-                },
-                errorMessage = null
-            )
+    override suspend fun createAccount(username: String, email: String, password: String) {
 
-        }catch (e: Exception) {
-            e.printStackTrace()
-            if (e is CancellationException) throw e
-            SignInResult(
-                data = null,
-                errorMessage = e
-            )
-        } catch (e: ApiException) {
-            Timber.tag("One-Tap_Error").e(e)
-            SignInResult(
-                data = null,
-                errorMessage = e
-            )
+        val profileUpdates = userProfileChangeRequest {
+            displayName = username
+            photoUri = Uri.parse("https://example.com/jane-q-user/profile.jpg")
         }
+        auth.createUserWithEmailAndPassword(email, password).await().user?.updateProfile(
+            profileUpdates
+        )
+        sendEmailVerification(email)
     }
 
     override suspend fun deleteAccount() {
@@ -99,7 +85,4 @@ class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) :
         //createAnonymousAccount()
     }
 
-    companion object {
-        private const val LINK_ACCOUNT_TRACE = "linkAccount"
-    }
 }

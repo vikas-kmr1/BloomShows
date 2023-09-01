@@ -2,7 +2,6 @@ package com.android.bloomshows.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -65,11 +64,8 @@ fun NavGraph(
         composable(route = SignUpDestination.route) {
             EnterFallDownAnimation {
                 SignUpRoute(
-                    onNavigateToLogin = {
+                    navigateToLogin = {
                         navigationController.navigateUp()
-                    },
-                    onSignUpSubmitted = {
-                        navigationController.navigateSingleTopTo(route = HomeDestination.route)
                     }
                 )
             }

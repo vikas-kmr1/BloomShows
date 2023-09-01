@@ -1,5 +1,6 @@
 package com.android.bloomshows.ui.common_components
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -7,6 +8,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.android.bloomshows.R
@@ -33,10 +35,10 @@ fun NotifyAlertDialog(
             },
             icon = icon,
             title = {
-                Text(text = title, textAlign = TextAlign.Center)
+                Text(modifier = Modifier.fillMaxWidth(), text = title, textAlign = TextAlign.Center)
             },
             text = {
-                Text(text = text, textAlign = TextAlign.Center)
+                Text(modifier = Modifier.fillMaxWidth(),text = text, textAlign = TextAlign.Center)
             },
             confirmButton = {
                 TextButton(

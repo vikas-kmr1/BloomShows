@@ -28,7 +28,7 @@ fun AuthErrorSnackBar(
             snackbarHostState.showSnackbar(
                 message = message,
                 actionLabel = "Auth Failed!",
-                duration = SnackbarDuration.Long
+                duration = SnackbarDuration.Short
             )
         }
     }

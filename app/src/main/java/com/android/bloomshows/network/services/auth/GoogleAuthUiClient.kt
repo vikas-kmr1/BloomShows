@@ -1,6 +1,5 @@
 package com.android.bloomshows.network.services.auth
 
-import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import com.android.bloomshows.network.model.SignInResult
@@ -15,7 +14,6 @@ import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 class GoogleAuthUiClient(
-    private val context: Context,
     private val oneTapClient: SignInClient,
     private val buildSignInRequest: BeginSignInRequest,
     private val auth: FirebaseAuth
@@ -40,7 +38,8 @@ class GoogleAuthUiClient(
                     User(
                         userId = uid,
                         username = displayName,
-                        profilePic = photoUrl?.toString()
+                        profilePic = photoUrl?.toString(),
+                        emailVerfied = isEmailVerified
                     )
                 },
                 errorMessage = null
@@ -70,14 +69,6 @@ class GoogleAuthUiClient(
             if (e is CancellationException) throw e
         }
     }
-
-//    fun getSignedInUser(): User? = auth.currentUser?.run {
-//        User(
-//            userId = uid,
-//            username = displayName,
-//            profilePic = photoUrl?.toString()
-//        )
-//    }
 
     private fun buildSignInRequest(): BeginSignInRequest = buildSignInRequest
 }

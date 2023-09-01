@@ -10,16 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import com.android.bloomshows.navigation.NavGraph
 import com.android.bloomshows.ui.theme.BloomShowsTheme
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+        window.setSoftInputMode(WindowCompat.FEATURE_ACTION_BAR)
         //setting fullscreen window
         WindowCompat.setDecorFitsSystemWindows(window,false)
         setContent {
