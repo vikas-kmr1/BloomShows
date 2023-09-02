@@ -9,9 +9,10 @@ interface AccountService {
 
     val currentUser: Flow<User>
     val emailVerfied: Boolean
-
+    val userAnonymous:Boolean
     suspend fun authenticate(email: String, password: String)
     suspend fun sendRecoveryEmail(email: String)
+
     suspend fun sendEmailVerification(email: String)
     suspend fun createAnonymousAccount()
     suspend fun createAccount(username:String,email: String, password: String)

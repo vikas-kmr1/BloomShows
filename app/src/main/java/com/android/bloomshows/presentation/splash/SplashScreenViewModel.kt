@@ -26,22 +26,13 @@ class SplashViewModel @Inject constructor(
     )
 
     fun onAppStart(openHome: () -> Unit, openLogIn: () -> Unit) {
-        if (accountService.hasUser and accountService.emailVerfied) {
+        if ((accountService.hasUser and  accountService.emailVerfied)  or accountService.userAnonymous) {
             openHome()
         } else {
             openLogIn()
         }
     }
 
-    /**
-     * save user name
-     * */
-    fun saveUserFirstTime() {
-        viewModelScope.launch(Dispatchers.IO) {
-            userPreferencesRepository.saveFirstTimePreference(false)
-
-        }
-    }
 
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L

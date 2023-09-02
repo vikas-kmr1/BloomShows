@@ -35,16 +35,15 @@ object FirebaseModule {
             )
             .setAutoSelectEnabled(true)
             .build()
-
+        R.string.google_app_id
     }
 
     @Provides
     @Singleton
     fun provideGoogleAuthUiClient(
-        @ApplicationContext appContext: Context,
         oneTapClient: SignInClient,
         buildSignInRequest: BeginSignInRequest,
-        auth:FirebaseAuth
+        auth: FirebaseAuth
     ):GoogleAuthUiClient{
         return GoogleAuthUiClient(oneTapClient, buildSignInRequest, auth)
     }

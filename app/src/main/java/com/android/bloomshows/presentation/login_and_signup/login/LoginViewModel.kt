@@ -1,6 +1,5 @@
 package com.android.bloomshows.presentation.login_and_signup.login
 
-import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
@@ -13,10 +12,10 @@ import com.android.bloomshows.network.model.BloomShowsErrorResponse
 import com.android.bloomshows.network.model.SignInResult
 import com.android.bloomshows.network.services.auth.AccountService
 import com.android.bloomshows.network.services.auth.GoogleAuthUiClient
-import com.android.bloomshows.presentation.login_and_signup.utils.EmailVerfiedException
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.FirebaseException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -41,28 +40,31 @@ class LoginViewModel @Inject constructor(
     var logInUiState: LoginUIState by mutableStateOf(LoginUIState.Progress(false))
         private set
 
-
-    val currentUser = accountService.currentUser.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-        initialValue = null
-    ) //userdata
-    val hasuser: Boolean = accountService.hasUser
-    val userId = accountService.currentUserId
-
-
     @Inject
     lateinit var googleAuthUiClient: GoogleAuthUiClient
+
 
     fun resetState() {
         logInUiState = LoginUIState.Progress(false)
     }
 
-    fun onGoogleSigninResult(result: SignInResult) {
-        logInUiState = if (result.data != null) LoginUIState.LoginSuccess(true)
-        else LoginUIState.Progress(
-            false
-        )
+    fun onSigninResult(result: SignInResult) {
+        logInUiState = if (result.data != null){
+            LoginUIState.LoginSuccess(true)
+        }
+        else if (result.errorMessage is CancellationException){
+            LoginUIState.Progress(
+                false
+            )
+        }
+        else {
+            LoginUIState.Error(
+                BloomShowsErrorResponse(
+                    message = result.errorMessage?.message,
+                    errorCode = result.errorMessage?.cause?.message
+                )
+            )
+        }
     }
 
     fun logIn(
@@ -108,7 +110,7 @@ class LoginViewModel @Inject constructor(
             logInUiState = LoginUIState.Progress(true)
             logInUiState = try {
                 val signInIntentSender = googleAuthUiClient.signIn()
-                val launcher = launcher.launch(
+                launcher.launch(
                     IntentSenderRequest.Builder(
                         signInIntentSender ?: return@launch
                     ).build()
@@ -130,22 +132,46 @@ class LoginViewModel @Inject constructor(
                         "Something wentwrong. Try later!"
                     )
                 )
+            }
+        }
+    }
+
+    fun signInAsAnonuymous(){
+        viewModelScope.launch {
+            logInUiState = LoginUIState.Progress(true)
+            logInUiState = try {
+                accountService.createAnonymousAccount()
+                LoginUIState.LoginSuccess(true) }
+            catch (firebaseError: FirebaseException) {
+                LoginUIState.Error(
+                    BloomShowsErrorResponse(
+                        message = firebaseError.localizedMessage,
+                        errorCode = firebaseError.cause?.message.toString()
+                    )
+                )
+            } catch (e: HttpException) {
+                LoginUIState.Error(BloomShowsErrorResponse("UNKOWN", "Network Error"))
+            } catch (e: ApiException) {
+                LoginUIState.Error(
+                    BloomShowsErrorResponse(
+                        "404",
+                        "Something went wrong. Try later!"
+                    )
+                )
             } catch (e: Exception) {
                 LoginUIState.Error(
                     BloomShowsErrorResponse(
                         "System Error",
-                        "Something went wrong. Try again!"
+                        "Something wentwrong. Try again!"
                     )
                 )
             }
         }
     }
-
     fun logOut(navigate_to_login: () -> Unit) {
         viewModelScope.launch {
             accountService.signOut()
             googleAuthUiClient.signOut().also {
-                resetState()
                 navigate_to_login()
             }
         }

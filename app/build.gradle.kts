@@ -79,47 +79,61 @@ dependencies {
     implementation("androidx.compose.foundation:foundation:1.5.0")
     //implementation("androidx.constraintlayout:constraintlayout:2.0.4")
 
+/*--------------------------------viewModel-lifecycle-------------------------------------*/
     // ViewModel utilities for Compose
     val lifecycle_version = "2.6.1"
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version")
 
+/*--------------------------------compose-naviagtion-------------------------------------*/
     //compose-navigation
     implementation("androidx.navigation:navigation-compose:2.5.0")
 
+/*--------------------------------compose-------------------------------------*/
     //animation
     implementation("androidx.compose.animation:animation:1.4.0")
-
-    //lottie-compose
-    implementation("com.airbnb.android:lottie-compose:5.2.0")
     //material Icons
     implementation("androidx.compose.material:material-icons-extended")
 
-//    //core-splash-
-//    implementation("androidx.core:core-splashscreen:1.0.1")
+/*--------------------------------lottie-------------------------------------*/
+    //lottie-compose
+    implementation("com.airbnb.android:lottie-compose:5.2.0")
 
-    //timber for better logging
-    implementation("com.jakewharton.timber:timber:5.0.1")
-
-    //sandwich by (skydoves Jaewoong Eum) to standardized interfaces from the Retrofit network response
-    implementation ("com.github.skydoves:sandwich:1.3.8")
-
+/*--------------------------------Coil-------------------------------------*/
     //compose Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
 
-    //hilt
+/*--------------------------------core-splash-------------------------------------*/
+    //core-splash-
+    //implementation("androidx.core:core-splashscreen:1.0.1")
+
+
+/*--------------------------------timber-------------------------------------*/
+    //timber for better logging
+    implementation("com.jakewharton.timber:timber:5.0.1")
+
+/*--------------------------------skydoves-sandwich-------------------------------------*/
+    //sandwich by (skydoves Jaewoong Eum) to standardized interfaces from the Retrofit network response
+    implementation("com.github.skydoves:sandwich:1.3.8")
+
+/*---------------------------------hilt-------------------------------------*/
     implementation("com.google.dagger:hilt-android:2.47")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+
+/*--------------------------------retrofit-------------------------------------*/
 
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     // Retrofit with Converter
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
 
+/*--------------------------------okhttp3-------------------------------------*/
     //http interceptors
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
 
+/*--------------------------------room-------------------------------------*/
     //room
     val room_version = "2.5.2"
 
@@ -133,10 +147,11 @@ dependencies {
     /* To use Kotlin annotation processing tool (kapt)
      kapt("androidx.room:room-compiler:$room_version") using ksp instead*/
 
+/*--------------------------------datastore-------------------------------------*/
     //datastore for preferences
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
-    //FIREBASE
+/*--------------------------------firebase-------------------------------------*/
     // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
 
@@ -146,10 +161,10 @@ dependencies {
 
     // Also add the dependency for the Google Play services library and specify its version
     implementation("com.google.android.gms:play-services-auth:20.6.0")
-    implementation("com.google.firebase:firebase-perf-ktx")
-    implementation("com.google.firebase:firebase-config-ktx")
+    //    implementation("com.google.firebase:firebase-perf-ktx")
+    //implementation("com.google.firebase:firebase-config-ktx")
 
-
+    /*--------------------------------------------------------------------*/
 
 }
 

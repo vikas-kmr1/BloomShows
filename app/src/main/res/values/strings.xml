@@ -4,7 +4,7 @@
     <string name="welcome_to_bloomshows">Welcome to BloomShows</string>
     <string name="login_or_signup_to_continue">Login or Signup to continue</string>
     <string name="login_with_google">Login with Google</string>
-    <string name="login_with_facebook">Login with Facebook</string>
+    <string name="login_as_anonymous">Login as Anonymous</string>
     <string name="or_continue_with_email">or continue with email</string>
     <string name="login_icon_back">Login icon back</string>
     <string name="login">Login</string>
@@ -27,7 +27,6 @@
     <string name="cancel">Cancel</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="name">Name</string>
-    <string name="CLient_ID">456961051580-apta5qoqeu51tcbc2phmvt496b4s699n.apps.googleusercontent.com</string>
     <string name="atleast_one_special_character"><![CDATA[Atleast 1 special character [@,$,!,%,&]]]></string>
     <string name="confirm">Confirm</string>
     <string name="please_check_your_mail_inbox_or_spam_folder">Please! Check your mail inbox or spams.</string>

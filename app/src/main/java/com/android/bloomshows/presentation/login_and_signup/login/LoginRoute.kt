@@ -4,12 +4,10 @@ import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.android.bloomshows.network.model.SignInResult
+import com.google.firebase.FirebaseException
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
@@ -27,24 +25,35 @@ fun LoginRoute(
     val loginState = logInViewModel.logInUiState
 
     //Activity launcer for Google SignIn
-    val launcher = rememberLauncherForActivityResult(
+    val launcherGoogle = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult(),
         onResult = { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 scope.launch {
                     if (result.resultCode == Activity.RESULT_OK) {
                         scope.launch {
+                            try{
                             val signInResult = googleAuthUiClient.signInWithIntent(
                                 intent = result.data ?: return@launch
                             )
-                            logInViewModel.onGoogleSigninResult(signInResult)
+                            logInViewModel.onSigninResult(signInResult)}
+                            catch (f : FirebaseException){
+                                logInViewModel.onSigninResult(
+                                    SignInResult(
+                                        data = null,
+                                        errorMessage = f
+                                    )
+                                )
+                            }
                         }
                     }
                 }
             } else {
-                logInViewModel.onGoogleSigninResult(SignInResult(
-                    data = null,
-                    errorMessage = CancellationException())
+                logInViewModel.onSigninResult(
+                    SignInResult(
+                        data = null,
+                        errorMessage = CancellationException()
+                    )
                 )
             }
         }
@@ -66,10 +75,9 @@ fun LoginRoute(
                 logInViewModel.resetState()
             }
         },
-        onGoogleSignInClicked = { logInViewModel.logInWithGoogle(launcher) },
-        onFaceBookSignInClicked = {},
+        onGoogleSignInClicked = { logInViewModel.logInWithGoogle(launcherGoogle) },
+        onAnonymousSignInClicked = logInViewModel::signInAsAnonuymous,
         loginUIState = loginState,
-        resetUiState = logInViewModel::resetState
     )
 }
 
