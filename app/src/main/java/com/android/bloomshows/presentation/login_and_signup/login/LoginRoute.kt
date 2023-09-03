@@ -30,22 +30,18 @@ fun LoginRoute(
         onResult = { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 scope.launch {
-                    if (result.resultCode == Activity.RESULT_OK) {
-                        scope.launch {
-                            try{
-                            val signInResult = googleAuthUiClient.signInWithIntent(
-                                intent = result.data ?: return@launch
+                    try {
+                        val signInResult = googleAuthUiClient.signInWithIntent(
+                            intent = result.data ?: return@launch
+                        )
+                        logInViewModel.onSigninResult(signInResult)
+                    } catch (f: FirebaseException) {
+                        logInViewModel.onSigninResult(
+                            SignInResult(
+                                data = null,
+                                errorMessage = f
                             )
-                            logInViewModel.onSigninResult(signInResult)}
-                            catch (f : FirebaseException){
-                                logInViewModel.onSigninResult(
-                                    SignInResult(
-                                        data = null,
-                                        errorMessage = f
-                                    )
-                                )
-                            }
-                        }
+                        )
                     }
                 }
             } else {
