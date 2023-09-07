@@ -1,4 +1,8 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+import java.io.FileInputStream
+import java.util.Properties
+
 
 plugins {
     id("com.android.application")
@@ -10,25 +14,31 @@ plugins {
     id("com.google.devtools.ksp")
     id("com.google.gms.google-services")
 }
-
 android {
     namespace = "com.android.bloomshows"
-    compileSdk = 34
+    compileSdk = rootProject.extra.get("compileSdkVersion") as Int
 
     defaultConfig {
         applicationId = "com.android.bloomshows"
-        minSdk = 26
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
+        minSdk = rootProject.extra.get("minSdkVersion") as Int
+        targetSdk = rootProject.extra.get("targetSdkVersion") as Int
+        versionCode = rootProject.extra.get("versionCode") as Int
+        versionName = rootProject.extra.get("versionName") as String
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String", "TMDB_API_KEY", "${getProperty("local.properties", "tmdb_api_key")}")
+
     }
 
     buildTypes {
+
+        debug {
+            isDebuggable = true
+        }
+
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -46,9 +56,10 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = rootProject.extra.get("kotlinCompilerExtensionVersion") as String
     }
     packaging {
         resources {
@@ -58,16 +69,20 @@ android {
 }
 
 dependencies {
-
     //defaults
-    implementation("androidx.core:core-ktx:1.10.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-    implementation("androidx.activity:activity-compose:1.7.2")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
+    val coreKtxVersion = rootProject.extra.get("ktx-core-version")
+    val runtimeKtxVersion = rootProject.extra.get("runtime-ktx-version")
+    val activityComposeVersion = rootProject.extra.get("activity-compose-version")
+
+    implementation("androidx.core:core-ktx:$coreKtxVersion")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$runtimeKtxVersion")
+    implementation("androidx.activity:activity-compose:$activityComposeVersion")
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+
     testImplementation("junit:junit:4.13.2")
     debugImplementation("androidx.compose.ui:ui-tooling")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -79,92 +94,107 @@ dependencies {
     implementation("androidx.compose.foundation:foundation:1.5.0")
     //implementation("androidx.constraintlayout:constraintlayout:2.0.4")
 
-/*--------------------------------viewModel-lifecycle-------------------------------------*/
+    /*--------------------------------viewModel-lifecycle-------------------------------------*/
     // ViewModel utilities for Compose
-    val lifecycle_version = "2.6.1"
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version")
+    val viewModelVersion  =   rootProject.extra.get("viewModel-version")
 
-/*--------------------------------compose-naviagtion-------------------------------------*/
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$viewModelVersion")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:$viewModelVersion")
+
+    /*--------------------------------compose-navigation-------------------------------------*/
     //compose-navigation
-    implementation("androidx.navigation:navigation-compose:2.5.0")
+    val composeNavigationVersion = rootProject.extra.get("navigation-compose-version")
+    implementation("androidx.navigation:navigation-compose:$composeNavigationVersion")
 
-/*--------------------------------compose-------------------------------------*/
+    /*--------------------------------compose-------------------------------------*/
     //animation
-    implementation("androidx.compose.animation:animation:1.4.0")
+    implementation("androidx.compose.animation:animation")
     //material Icons
     implementation("androidx.compose.material:material-icons-extended")
 
-/*--------------------------------lottie-------------------------------------*/
+    /*--------------------------------lottie-------------------------------------*/
     //lottie-compose
-    implementation("com.airbnb.android:lottie-compose:5.2.0")
+    val lottieComposeVersion = rootProject.extra.get("lottie-compose-version")
+    implementation("com.airbnb.android:lottie-compose:$lottieComposeVersion")
 
-/*--------------------------------Coil-------------------------------------*/
-    //compose Coil
-    implementation("io.coil-kt:coil-compose:2.4.0")
+    /*--------------------------------Coil-------------------------------------*/
+    val composeCoilVersion = rootProject.extra.get("coil-compose-version")
+    implementation("io.coil-kt:coil-compose:$composeCoilVersion")
 
-/*--------------------------------core-splash-------------------------------------*/
+    /*--------------------------------core-splash-------------------------------------*/
     //core-splash-
     //implementation("androidx.core:core-splashscreen:1.0.1")
 
 
-/*--------------------------------timber-------------------------------------*/
-    //timber for better logging
-    implementation("com.jakewharton.timber:timber:5.0.1")
+    /*--------------------------------timber-------------------------------------*/
+    val timberVersion = rootProject.extra.get("timber-version")
+    implementation("com.jakewharton.timber:timber:$timberVersion")
 
-/*--------------------------------skydoves-sandwich-------------------------------------*/
+    /*--------------------------------skydoves-sandwich-------------------------------------*/
     //sandwich by (skydoves Jaewoong Eum) to standardized interfaces from the Retrofit network response
-    implementation("com.github.skydoves:sandwich:1.3.8")
+    val sandwichVersion = rootProject.extra.get("sandwich-version")
+    implementation("com.github.skydoves:sandwich:$sandwichVersion")
 
-/*---------------------------------hilt-------------------------------------*/
-    implementation("com.google.dagger:hilt-android:2.47")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    /*---------------------------------hilt-------------------------------------*/
+    val hiltVersion = rootProject.extra.get("hilt-android-version")
+    val hiltCompilerVersion = rootProject.extra.get("hilt-android-compiler-version")
+    val hiltNavigationVersion = rootProject.extra.get("hilt-navigation-version",)
+
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    kapt("com.google.dagger:hilt-android-compiler:$hiltCompilerVersion")
+    implementation("androidx.hilt:hilt-navigation-compose:$hiltNavigationVersion")
 
 
-/*--------------------------------retrofit-------------------------------------*/
-
+    /*--------------------------------retrofit-------------------------------------*/
+    val retrofitVersion = rootProject.extra.get("retrofit-version")
     // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
     // Retrofit with Converter
-    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
+    implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
 
-/*--------------------------------okhttp3-------------------------------------*/
-    //http interceptors
-    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    val moshiVersion = "1.15.0"
+    implementation("com.squareup.moshi:moshi-kotlin:$moshiVersion")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
 
-/*--------------------------------room-------------------------------------*/
+    /*--------------------------------okhttp3-------------------------------------*/
+    val okHttpVersion = rootProject.extra.get("okhttp3-version")
+    implementation("com.squareup.okhttp3:okhttp:$okHttpVersion")
+
+    /*--------------------------------room-------------------------------------*/
     //room
-    val room_version = "2.5.2"
-
-    implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
+    val roomVersion = rootProject.extra.get("room-version")
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
     // Kotlin Extensions and Coroutines support for Room
-    implementation("androidx.room:room-ktx:$room_version")
+    implementation("androidx.room:room-ktx:$roomVersion")
     // To use Kotlin Symbol Processing (KSP)
-    ksp("androidx.room:room-compiler:$room_version")
+    ksp("androidx.room:room-compiler:$roomVersion")
+
+    implementation("androidx.room:room-paging:$roomVersion")
 
     /* To use Kotlin annotation processing tool (kapt)
      kapt("androidx.room:room-compiler:$room_version") using ksp instead*/
 
-/*--------------------------------datastore-------------------------------------*/
-    //datastore for preferences
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    /*--------------------------------datastore-------------------------------------*/
+    val dataStoreVersion = rootProject.extra.get("datastore-preferences-version")
+    implementation("androidx.datastore:datastore-preferences:$dataStoreVersion")
 
-/*--------------------------------firebase-------------------------------------*/
+    /*--------------------------------firebase-------------------------------------*/
     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
+    val firebaseBomVersion = rootProject.extra.get("firebase-bom-version")
+    implementation(platform("com.google.firebase:firebase-bom:$firebaseBomVersion"))
 
-    // Add the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-auth-ktx")
 
-    // Also add the dependency for the Google Play services library and specify its version
-    implementation("com.google.android.gms:play-services-auth:20.6.0")
+    val playServiceVersion = rootProject.extra.get("play-services-auth-version")
+    implementation("com.google.android.gms:play-services-auth:$playServiceVersion")
     //    implementation("com.google.firebase:firebase-perf-ktx")
     //implementation("com.google.firebase:firebase-config-ktx")
 
-    /*--------------------------------------------------------------------*/
+    /*--------------------------------Pager3------------------------------------*/
+    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha18")
 
 }
 
@@ -172,3 +202,20 @@ dependencies {
 //kapt {
 //    correctErrorTypes = true
 //}
+
+
+fun getProperty(filename: String, propName: String): Any? {
+    val propsFile = rootProject.file(filename)
+    if (propsFile.exists()) {
+        val props = Properties()
+        props.load(FileInputStream(propsFile))
+        if (props[propName] != null) {
+            return props[propName]
+        } else {
+            print("No such property ${propName} in file $filename")
+        }
+    } else {
+        print("$filename  does not exist!")
+    }
+    return null
+}
