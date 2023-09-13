@@ -20,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.android.bloomshows.R
 import com.android.bloomshows.ui.theme.BloomShowsTheme
 import com.android.bloomshows.ui.theme.MediumPadding
@@ -54,7 +55,7 @@ fun TopContent(modifier: Modifier = Modifier, navigate_to_login: () -> Unit, pag
             contentDescription = "Logo"
         )
 
-        TextButton(onClick = navigate_to_login, enabled = pageInd < 2) {
+        TextButton(onClick = navigate_to_login, enabled = pageInd < 2, modifier = Modifier.zIndex(100f)) {
             Text(
                 text = if (pageInd < 2) stringResource(R.string.skip) else "",
                 color = Color.Black,

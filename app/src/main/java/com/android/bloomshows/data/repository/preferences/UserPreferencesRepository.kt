@@ -1,4 +1,4 @@
-package com.android.bloomshows.data.local.preferences
+package com.android.bloomshows.data.repository.preferences
 
 import kotlinx.coroutines.flow.Flow
 

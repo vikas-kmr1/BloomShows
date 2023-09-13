@@ -212,7 +212,7 @@ private fun SignUpInputFields(
 
         val (termsCheckedState, onStateChange) = remember { mutableStateOf(false) }
 
-        //TODO authentication and user -credential verification
+        // authentication and user -credential verification
         val onSubmit = {
             if (emailState.isValid && passwordState.isValid && passwordConfirmState.isValid && nameState.isValid && termsCheckedState) {
                 onSignUpSubmitted(nameState.text, emailState.text, passwordState.text)

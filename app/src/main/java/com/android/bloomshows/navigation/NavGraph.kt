@@ -1,18 +1,26 @@
 package com.android.bloomshows.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.android.bloomshows.presentation.MovieDetails.MovieDetailsRoute
 import com.android.bloomshows.presentation.home.HomeRoute
 import com.android.bloomshows.presentation.login_and_signup.forgot_password.Forgot_password_route
 import com.android.bloomshows.presentation.login_and_signup.login.LoginRoute
 import com.android.bloomshows.presentation.login_and_signup.signup.SignUpRoute
 import com.android.bloomshows.presentation.on_boarding.OnBoardingScreen
 import com.android.bloomshows.presentation.splash.SplashScreen
-import com.android.bloomshows.utils.animations.EnterExitFadeTransition
 import com.android.bloomshows.utils.animations.EnterFallDownAnimation
 
 
@@ -78,13 +86,53 @@ fun NavGraph(
             }
         }
         composable(route = HomeDestination.route) {
-            EnterExitFadeTransition {
-                HomeRoute(
-                    navigate_to_login = {
-                        navigationController.navigateSingleTopTo(LoginDestination.route)
-                    }
+
+            HomeRoute(
+                navigate_to_login = {
+                    navigationController.navigateSingleTopTo(LoginDestination.route)
+                },
+                navController = navigationController
+            )
+
+        }
+
+        composable(
+            route = MovieDetailsDestination.routeWithArgs,
+            arguments = MovieDetailsDestination.arguments,
+            enterTransition = {
+                fadeIn(
+                    animationSpec = tween(
+                        300, easing = LinearEasing
+                    )
+                ) + slideIntoContainer(
+                    animationSpec = tween(300, easing = EaseIn),
+                    towards = AnimatedContentTransitionScope.SlideDirection.Start
+                )
+            },
+            exitTransition = {
+                fadeOut(
+                    animationSpec = tween(
+                        300, easing = LinearEasing
+                    )
+                ) + slideOutOfContainer(
+                    animationSpec = tween(300, easing = EaseOut),
+                    towards = AnimatedContentTransitionScope.SlideDirection.End
                 )
             }
+        ) { navBackStackEntry ->
+            val id: String = remember {
+                navBackStackEntry.arguments?.getString(MovieDetailsDestination.id)
+            } ?: "0"
+            val name: String = remember {
+                navBackStackEntry.arguments?.getString(MovieDetailsDestination.name)
+            } ?: "name"
+
+            MovieDetailsRoute(
+                id = id,
+                name = name,
+                navigateUp = { navigationController.navigateUp() }
+            )
+
         }
     }
 }

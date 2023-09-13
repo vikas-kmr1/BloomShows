@@ -2,8 +2,12 @@ package com.android.bloomshows.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.bloomshows.data.local.preferences.UserPreferencesRepository
+import androidx.paging.cachedIn
+import com.android.bloomshows.data.repository.movie.MovieRepository
+import com.android.bloomshows.data.repository.preferences.UserPreferencesRepository
 import com.android.bloomshows.network.services.auth.AccountService
+import com.android.bloomshows.utils.MediaCategories
+import com.android.bloomshows.utils.Time_Window
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository,
-    private val accountService: AccountService
+    accountService: AccountService,
+    private val movieRepository: MovieRepository
 ) : ViewModel() {
 
     //userdata
@@ -28,6 +33,26 @@ class HomeViewModel @Inject constructor(
     val hasuser: Boolean = accountService.hasUser
     val userId = accountService.currentUserId
 
+    val trendingPagingFlow = movieRepository.fetchMovieList(
+        language = "en-US",
+        timeWindow = Time_Window.DAY,
+        pageSize = 20,
+        category = MediaCategories.TRENDING
+    ).cachedIn(viewModelScope)
+
+    val popularPagingFlow = movieRepository.fetchMovieList(
+        language = "en-US",
+        timeWindow = Time_Window.DAY,
+        pageSize = 20,
+        category = MediaCategories.POPULAR
+    ).cachedIn(viewModelScope)
+
+    val nowPlayingPagingFlow = movieRepository.fetchMovieList(
+        language = "en-US",
+        timeWindow = Time_Window.DAY,
+        pageSize = 20,
+        category = MediaCategories.NOW_PLAYING
+    ).cachedIn(viewModelScope)
 
     val isFirstTime: StateFlow<Boolean> = userPreferencesRepository.isUserFirstTime.stateIn(
         scope = viewModelScope,
@@ -35,9 +60,9 @@ class HomeViewModel @Inject constructor(
         initialValue = true
     )
 
-    fun saveUserFirstTime() {
+    fun saveUserFirstTime(value: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO) {
-            userPreferencesRepository.saveFirstTimePreference(false)
+            userPreferencesRepository.saveFirstTimePreference(value)
 
         }
     }

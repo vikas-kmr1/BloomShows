@@ -1,5 +1,8 @@
 package com.android.bloomshows.navigation
 
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+
 interface Screens {
     val title: String
     val route: String
@@ -29,9 +32,25 @@ internal object ForgetCredentialsDestination : Screens {
     override val route: String = "ForgetCredentialsScreen"
 }
 
-
-
 internal object HomeDestination : Screens {
     override val title: String = "Home"
     override val route: String = "HomeScreen"
+}
+internal object MovieDetailsDestination : Screens {
+    override val title: String = "Details"
+    override val route: String = "DetailsScreen"
+    val id:String = "id"
+    val name:String = "name"
+    val routeWithArgs = "$route/{$id}/{$name}"
+
+    val arguments = listOf(
+        navArgument(name = id) {
+            type = NavType.StringType
+            defaultValue = id
+        },
+        navArgument(name = name) {
+            type = NavType.StringType
+            defaultValue = name
+        }
+    )
 }

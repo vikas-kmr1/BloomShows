@@ -1,4 +1,4 @@
-package com.android.bloomshows.data.local.preferences
+package com.android.bloomshows.data.repository.preferences
 
 import android.util.Log
 import androidx.datastore.core.DataStore

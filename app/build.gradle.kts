@@ -1,5 +1,3 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -71,6 +69,7 @@ android {
 dependencies {
     //defaults
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
+
     val coreKtxVersion = rootProject.extra.get("ktx-core-version")
     val runtimeKtxVersion = rootProject.extra.get("runtime-ktx-version")
     val activityComposeVersion = rootProject.extra.get("activity-compose-version")
@@ -93,6 +92,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("androidx.compose.foundation:foundation:1.5.0")
     //implementation("androidx.constraintlayout:constraintlayout:2.0.4")
+//    implementation("com.google.android.material:material:1.9.0")
+//    implementation("androidx.recyclerview:recyclerview:1.3.1")
 
     /*--------------------------------viewModel-lifecycle-------------------------------------*/
     // ViewModel utilities for Compose

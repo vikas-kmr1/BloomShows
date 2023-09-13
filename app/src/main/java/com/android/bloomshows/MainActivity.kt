@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import com.android.bloomshows.navigation.NavGraph
 import com.android.bloomshows.ui.theme.BloomShowsTheme
+import com.android.bloomshows.utils.MediaCategories
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

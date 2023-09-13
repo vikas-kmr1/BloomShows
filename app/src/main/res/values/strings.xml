@@ -34,4 +34,7 @@
     <string name="login_now">login now</string>
     <string name="email_verification_link_sent">"Email verification link sent! "</string>
     <string name="please_verify_your_email_to_continue">Please! verify your email to continue.</string>
+    <string name="trending">Trending</string>
+    <string name="in_theaters">In Theaters</string>
+    <string name="what_s_popular">What\'s Popular</string>
 </resources>

@@ -2,7 +2,7 @@ package com.android.bloomshows.presentation.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.bloomshows.data.local.preferences.UserPreferencesRepository
+import com.android.bloomshows.data.repository.preferences.UserPreferencesRepository
 import com.android.bloomshows.network.services.auth.AccountService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

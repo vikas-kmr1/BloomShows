@@ -9,10 +9,10 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class FirebaseServiceModule {
+abstract class FirebaseBindModule {
 
     @Binds
-    abstract fun provideAccountService(impl: AccountServiceImpl): AccountService
+    abstract fun bindAccountService(impl: AccountServiceImpl): AccountService
 
 
 }
