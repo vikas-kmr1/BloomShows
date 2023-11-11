@@ -12,7 +12,6 @@ interface MovieRepository {
     fun fetchMovieList(
         language: String,
         timeWindow: Time_Window,
-        pageSize: Int,
         category: MediaCategories
     ): Flow<PagingData<MovieEntity>>
 

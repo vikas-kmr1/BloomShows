@@ -2,6 +2,7 @@ package com.android.bloomshows.navigation
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.android.bloomshows.navigation.MovieDetailsDestination.id
 
 interface Screens {
     val title: String
@@ -52,5 +53,17 @@ internal object MovieDetailsDestination : Screens {
             type = NavType.StringType
             defaultValue = name
         }
+    )
+}
+internal object MoreMovieDestination : Screens {
+    override val title: String = "More Movies"
+    override val route: String = "movies"
+    val routeWithArgs = "$route/{$title}"
+
+    val arguments = listOf(
+        navArgument(name = title ) {
+            type = NavType.StringType
+            defaultValue = title
+        },
     )
 }

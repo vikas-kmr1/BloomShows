@@ -35,35 +35,38 @@ class MovieRemoteMediator constructor(
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, MovieEntity>
-    ): MediatorResult {
+    ):  MediatorResult {
 
         return try {
             val loadKey = when (loadType) {
                 LoadType.REFRESH -> 1
                 LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
                 LoadType.APPEND -> {
-                    val lstItem = state.lastItemOrNull()
-                    val key = appDatabase.withTransaction {
-                        appDatabase.theMovieDao().getMovieCount(category.title)
-                    }
+                    val lastItem = state.lastItemOrNull()
 
-                    if (lstItem == null) {
-                        1
-                    } else {
-                        (key/state.config.pageSize) + 1
+                    val key = state.pages.size.times(state.config.pageSize) / state.config.pageSize
+
+                    // no more items to load.
+                    if (lastItem == null) {
+                        return MediatorResult.Success(
+                            endOfPaginationReached = true
+                        )
                     }
+                    lastItem.page + 1
                 }
             }
 
             val movieResponse:MovieResponse =
-            when(category){
-                MediaCategories.TRENDING -> movieApiService.fetchTrendingMovies(timeWindow = timeWindow.title,language=language)
-                MediaCategories.POPULAR -> movieApiService.fetchPopularMovies(page = loadKey,language= language)
-                MediaCategories.NOW_PLAYING -> movieApiService.fetchNowPlayingMovies(page = loadKey,language= language)
-                MediaCategories.RECOMMENDATIONS -> movieApiService.fetchTrendingMovies(timeWindow = timeWindow.title,language= language)
-            }
+                when(category){
+                    MediaCategories.TRENDING -> movieApiService.fetchTrendingMovies(timeWindow = timeWindow.title,language=language)
+                    MediaCategories.POPULAR -> movieApiService.fetchPopularMovies(page = loadKey,language= language)
+                    MediaCategories.NOW_PLAYING -> movieApiService.fetchNowPlayingMovies(page = loadKey,language= language)
+                    MediaCategories.RECOMMENDATIONS -> movieApiService.fetchTrendingMovies(timeWindow = timeWindow.title,language= language)
+                }
 
             val movieEntities = movieResponse.asEntity(category = category.title)
+
+
             appDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     //appDatabase.theMovieDao().deleteAllMovie()
@@ -72,11 +75,12 @@ class MovieRemoteMediator constructor(
             }
 
             MediatorResult.Success(endOfPaginationReached = movieResponse.results.isEmpty())
-
         } catch (e: IOException) {
             MediatorResult.Error(e)
         } catch (e: HttpException) {
             MediatorResult.Error(e)
         }
     }
+
+
 }

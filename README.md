@@ -18,3 +18,10 @@
 |------------------------------------------------------------------|-------------------------------------------------------------------|-------------------------------------------------------------------|------------------------------------------------------------|
 | <img width ="200px" src = "BloomshowsRes/screenshots/login.jpg"> | <img width ="200px" src = "BloomshowsRes/screenshots/signup.jpg"> | <img width ="200px" src = "BloomshowsRes/screenshots/forget.jpg"> | <img width ="200px" src = "BloomshowsRes/screenshots/login_signup.gif"/> |
 
+
+
+* before you start:
+* add api key in local.properties
+  > tmdb_api_key = "Your_Api_Key"
+* add SHA1 to console and google-servies.json
+    * in root directory of the project, inside the "app" directory:

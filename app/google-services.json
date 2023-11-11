@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "456961051580",
+    "project_id": "bloomshows",
+    "storage_bucket": "bloomshows.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:456961051580:android:d33f7e82aa1ef783a2f9b9",
+        "android_client_info": {
+          "package_name": "com.android.bloomshows"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "456961051580-k8tqh9qch494nu89o646kjup9p9f350g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.bloomshows",
+            "certificate_hash": "5fef7f519b55561b459037015db25134e67c53f8"
+          }
+        },
+        {
+          "client_id": "456961051580-t7tcsvgp7tbbifa77o2q46o8v9c9ri4f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1FJmD4hqjuCbHXZBm9fiYTmZQFZacrgY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "456961051580-apta5qoqeu51tcbc2phmvt496b4s699n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

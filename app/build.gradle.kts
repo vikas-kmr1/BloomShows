@@ -197,6 +197,7 @@ dependencies {
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
     implementation("androidx.paging:paging-compose:1.0.0-alpha18")
 
+
 }
 
 //// Allow references to generated code

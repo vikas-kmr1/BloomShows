@@ -4,6 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.android.bloomshows.data.room.AppDatabase
 import com.android.bloomshows.data.room.entity.MovieEntity
 import com.android.bloomshows.network.services.the_movie_db.MovieApiService
@@ -20,10 +21,10 @@ class MovieRepositoryImpl @Inject constructor(
     override fun fetchMovieList(
         language: String,
         timeWindow: Time_Window,
-        pageSize: Int,
         category: MediaCategories
     ): Flow<PagingData<MovieEntity>> = Pager(
-        config = PagingConfig(pageSize = pageSize),
+        config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
+        initialKey = 1,
         remoteMediator = MovieRemoteMediator(
             appDatabase = appDatabase,
             movieApiService = movieApiService,
@@ -37,4 +38,8 @@ class MovieRepositoryImpl @Inject constructor(
 
     override fun fetchMovieById(id: String): MovieEntity =
         appDatabase.theMovieDao().getMovieById(id = id)
+
+    companion object {
+        const val NETWORK_PAGE_SIZE = 20
+    }
 }

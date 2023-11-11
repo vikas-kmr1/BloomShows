@@ -16,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.android.bloomshows.presentation.MovieDetails.MovieDetailsRoute
 import com.android.bloomshows.presentation.home.HomeRoute
+import com.android.bloomshows.presentation.home.components.MoviesVerticalGridList
 import com.android.bloomshows.presentation.login_and_signup.forgot_password.Forgot_password_route
 import com.android.bloomshows.presentation.login_and_signup.login.LoginRoute
 import com.android.bloomshows.presentation.login_and_signup.signup.SignUpRoute
@@ -32,7 +33,7 @@ fun NavGraph(
         //TODO change this with the screen you are working on
         // be sure to reset it to splashscreen when you donw
         modifier = Modifier,
-        startDestination = SplashDestination.route,
+        startDestination = HomeDestination.route,
         navController = navigationController,
     ) {
         composable(route = SplashDestination.route) {
@@ -132,6 +133,46 @@ fun NavGraph(
                 name = name,
                 navigateUp = { navigationController.navigateUp() }
             )
+        }
+
+        composable(
+            route = MoreMovieDestination.routeWithArgs,
+            arguments = MoreMovieDestination.arguments,
+            enterTransition = {
+                fadeIn(
+                    animationSpec = tween(
+                        300, easing = LinearEasing
+                    )
+                ) + slideIntoContainer(
+                    animationSpec = tween(300, easing = EaseIn),
+                    towards = AnimatedContentTransitionScope.SlideDirection.Start
+                )
+            },
+            exitTransition = {
+                fadeOut(
+                    animationSpec = tween(
+                        300, easing = LinearEasing
+                    )
+                ) + slideOutOfContainer(
+                    animationSpec = tween(300, easing = EaseOut),
+                    towards = AnimatedContentTransitionScope.SlideDirection.End
+                )
+            }
+        ) { navBackStackEntry ->
+            val category: String = remember {
+                navBackStackEntry.arguments?.getString(MoreMovieDestination.title)
+            } ?: "0"
+
+            MoviesVerticalGridList(
+                category = category,
+                navigateToDetails = { id: String, name: String ->
+                    navigationController.navigate(
+                        route = "${MovieDetailsDestination.route}/$id/${
+                            name.trim().replace(" ", "-")
+                        }",
+                    )
+                },
+                navigateToHome = {navigationController.navigateSingleTopTo(HomeDestination.route)})
 
         }
     }

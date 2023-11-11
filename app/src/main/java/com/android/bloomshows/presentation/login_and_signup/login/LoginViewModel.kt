@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -96,7 +97,7 @@ class LoginViewModel @Inject constructor(
                 LoginUIState.Error(
                     BloomShowsErrorResponse(
                         "System Error",
-                        "Something wentwrong. Try again!"
+                        "Something went wrong. Try again!"
                     )
                 )
             }
@@ -126,10 +127,12 @@ class LoginViewModel @Inject constructor(
             } catch (e: HttpException) {
                 LoginUIState.Error(BloomShowsErrorResponse("UNKOWN", "Network Error"))
             } catch (e: ApiException) {
+                Timber.tag("ui Exception").v(e.toString())
+
                 LoginUIState.Error(
                     BloomShowsErrorResponse(
                         "404",
-                        "Something wentwrong. Try later!"
+                        "Something went wrong. Try later!"
                     )
                 )
             }

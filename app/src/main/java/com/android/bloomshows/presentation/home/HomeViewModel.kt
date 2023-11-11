@@ -36,21 +36,18 @@ class HomeViewModel @Inject constructor(
     val trendingPagingFlow = movieRepository.fetchMovieList(
         language = "en-US",
         timeWindow = Time_Window.DAY,
-        pageSize = 20,
         category = MediaCategories.TRENDING
     ).cachedIn(viewModelScope)
 
     val popularPagingFlow = movieRepository.fetchMovieList(
         language = "en-US",
         timeWindow = Time_Window.DAY,
-        pageSize = 20,
         category = MediaCategories.POPULAR
     ).cachedIn(viewModelScope)
 
     val nowPlayingPagingFlow = movieRepository.fetchMovieList(
         language = "en-US",
         timeWindow = Time_Window.DAY,
-        pageSize = 20,
         category = MediaCategories.NOW_PLAYING
     ).cachedIn(viewModelScope)
 

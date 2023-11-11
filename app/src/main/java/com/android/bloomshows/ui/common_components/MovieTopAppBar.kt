@@ -23,7 +23,7 @@ import java.util.Locale
 fun MovieTopAppBar(
     modifier: Modifier = Modifier,
     title: String,
-    id: String,
+    id: String = "" ,
     handleNavBack: () -> Unit = {},
     containerColor: Color = MaterialTheme.colorScheme.surface
 ) {
